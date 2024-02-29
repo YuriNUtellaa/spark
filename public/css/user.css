@@ -1,0 +1,171 @@
+/* LOGIN PAGE */
+
+.login-page {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+
+.form-login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgb(74, 83, 118);
+    background-color: #fff;
+    text-align: center;
+    width: 500px;
+}
+
+.form-login-page p{
+    font-size: 14px;
+}
+
+.form-login-page a{
+    font-weight: 1000;
+    color: rgb(232, 113, 33);
+}
+
+.login-page h2{
+    font-size: 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    color: #fff;
+    margin: 0; /* Reset margin */
+    margin-bottom: 20px;
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: rgb(74, 83, 118);
+}
+
+.form-login-page input{
+    width: 300px;
+    padding: 10px 15px;
+    font-size: 17px;
+    margin: 8px 0;
+    background: #eee;
+    border-radius: 3px;
+    border-top: 2px solid rgb(232, 113, 33);
+    border-left: 2px solid rgb(232, 113, 33);
+    border-right: 1px solid rgb(232, 113, 33);
+    border-bottom: 1px solid rgb(232, 113, 33);
+}
+
+.form-login-page button{
+    display: inline-block;
+    width: 300px;
+    margin: 5%;
+    padding: 3% 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: capitalize;
+    background: rgb(232, 113, 33);
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: all 1s ease;
+}
+
+/* REGISTER PAGE */
+
+.register-page {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+
+.form-register-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgb(74, 83, 118);
+    background-color: #fff;
+    text-align: center;
+    width: 500px;
+    position: relative;
+}
+
+.form-register-page p{
+    font-size: 14px;
+}
+
+.form-register-page a{
+    font-weight: 1000;
+    color: rgb(232, 113, 33);
+}
+
+.register-page h2{
+    font-size: 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    color: #fff;
+    margin: 0; /* Reset margin */
+    margin-bottom: 20px;
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: rgb(74, 83, 118);
+}
+
+.form-register-page input{
+    width: 300px;
+    padding: 10px 15px;
+    font-size: 17px;
+    margin: 8px 0;
+    background: #eee;
+    border-radius: 3px;
+    border-top: 2px solid rgb(232, 113, 33);
+    border-left: 2px solid rgb(232, 113, 33);
+    border-right: 1px solid rgb(232, 113, 33);
+    border-bottom: 1px solid rgb(232, 113, 33);
+}
+
+.form-register-page button{
+    display: inline-block;
+    width: 300px;
+    margin: 5%;
+    padding: 3% 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: capitalize;
+    background: rgb(232, 113, 33);
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: all 1s ease;
+}
+
+
+
+/* LOGIN & REGISTER EFFECTS */
+
+.form-register-page button:hover, .form-login-page  button:hover{
+    background-color:  rgb(74, 83, 118);
+    color: #fff;
+    transition: all .1s ease;
+}
+
+
+.form-register-page input:hover, .form-login-page input:hover{
+    background: #eee;
+    border-radius: 3px;
+    border-top: 2px solid rgb(74, 83, 118);
+    border-left: 2px solid rgb(74, 83, 118);
+    border-right: 1px solid rgb(74, 83, 118);
+    border-bottom: 1px solid rgb(74, 83, 118);
+}
+
