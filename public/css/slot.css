@@ -30,6 +30,10 @@ div.overall-slots{
     margin: 5%;
 }
 
+.slot{
+    min-height: 270px;
+}
+
 .available {
     position: relative;
     width: 250px;
@@ -64,8 +68,8 @@ div.overall-slots{
     height: auto;
     margin: 3%;
     transition: all .4s;
-    border: 3px solid rgb(228, 172, 135);
-    background-color: #dedede;
+    border: 3px solid rgb(232, 113, 33);
+    background-color: #fff;
     padding: 30px;
     padding-top: 90px;
     padding-bottom: 15px;

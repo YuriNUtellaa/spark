@@ -20,10 +20,12 @@ use App\Http\Controllers\SlotsController;
     Route::get('/login-admin', [AdminController::class, 'showLoginForm'])->name('login-admin');
     Route::post('/login-admin', [AdminController::class, 'login']);
 
-    // Missing route for displaying admin dashboard
-    Route::get('/home-admin', [AdminController::class, 'showAdminDashboard'])->name('home-admin');
+    Route::get('/slots-control-admin', [AdminController::class, 'showAdminSlot'])->name('slots-control-admin');
     Route::post('/logout-admin', [AdminController::class, 'logout'])->name('logout-admin');
-    
+
+    // RENTING AN IRREGULAR USER
+
+        Route::post('/confirm-rent-admin', [SlotsController::class, 'confirmRentAdmin'])->name('confirm-rent-admin');
 
 // FOR USER INTERFACE ////////////////////////////////////
 
@@ -35,7 +37,7 @@ use App\Http\Controllers\SlotsController;
 
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-    // RENT /////////////////////////////////////////////
+    // RENT 
 
         Route::get('/rent/{slot}', [SlotsController::class, 'showRentForm'])->name('rent');
         Route::post('/confirm-rent', [SlotsController::class, 'confirmRent'])->name('confirm-rent');

@@ -11,13 +11,13 @@ class AdminController extends Controller
 {
     public function showLoginForm()
     {
-        return view('Admin/login');
+        return view('Admin.login');
     }
 
-    public function showAdminDashboard()
+    public function showAdminSlot()
     {
         $slots = Slot::all();
-        return view('Admin/home', compact('slots'));
+        return view('Admin.slotsControl', compact('slots'));
     }
 
     public function login(Request $request)
@@ -31,11 +31,11 @@ class AdminController extends Controller
         // Attempt to authenticate the admin
         if (Auth::guard('admin')->attempt($credentials)) {
             // Authentication successful
-            return redirect()->intended('/home-admin'); // Redirect to the intended URL or a default path
+            return redirect()->intended('/slots-control-admin');
         }
     
         // Authentication failed
-        return back()->withErrors(['error' => 'Invalid credentials']); // Redirect back with an error message
+        return back()->withErrors(['error' => 'Invalid credentials']);
     }
 
     public function logout(Request $request)
@@ -48,7 +48,7 @@ class AdminController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('Admin/register');
+        return view('Admin.register');
     }
 
     public function register(Request $request)
@@ -57,7 +57,6 @@ class AdminController extends Controller
         $request->validate([
             'username' => 'required|unique:admins',
             'password' => 'required|min:6',
-            // Add more validation rules as needed
         ]);
 
         // Hash the admin's password
@@ -75,5 +74,4 @@ class AdminController extends Controller
         // Redirect the admin after successful registration
         return redirect()->route('login-admin')->with('success', 'Admin registration successful. Please log in.');
     }
-
 }

@@ -25,6 +25,8 @@ class SlotsController extends Controller
         return view('Users/rent', compact('slot'));
     }
 
+// USER SIDE //////////////////////////////////////////////////////////////////
+
     public function confirmRent(Request $request)
     {
         // Check if the user already has an active rental
@@ -75,4 +77,44 @@ class SlotsController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Rental ended successfully.');
     }
+
+// ADMIN SIDE //////////////////////////////////////////////////////////////
+
+    public function confirmRentAdmin(Request $request)
+    {
+        // Validate the form inputs
+        $request->validate([
+            'slot_id' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ]);
+
+        // Create a new user with type "irregular"
+        $user = new User();
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->type = 'irregular';
+        $user->save();
+
+        // Update the slot status
+        $slot = Slot::findOrFail($request->slot_id);
+        $slot->status = 'occupied';
+        $slot->updated_at = now();
+        $slot->save();
+
+        // Create a new SlotRental record
+        $slotRental = new SlotRental();
+        $slotRental->slot_id = $slot->id;
+        $slotRental->user_id = $user->id;
+        $slotRental->start_time = now();
+        $slotRental->save();
+
+        // Redirect to the admin slots control page after successful rental
+        return redirect()->route('slots-control-admin')->with('success', 'Slot rented successfully to irregular user.');
+    }
+
+    
+
 }
