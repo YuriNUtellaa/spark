@@ -1,5 +1,3 @@
-<!-- slotsControl.blade.php -->
-
 @extends('header')
 @extends('footer')
 
@@ -21,11 +19,17 @@
                         <form action="{{ route('rentAdmin', ['slot' => $slot->id]) }}" method="GET">
                             <button type="submit" name="rent">Rent a User</button>
                         </form>
-                        <button name="details">Reserve a User</button>
+                        <form action="{{ route('reserveAdmin', ['slot' => $slot->id]) }}" method="GET">
+                            <button type="submit" name="reserve">Reserve a User</button>
+                        </form>
                     @elseif($slot->status === 'occupied')
                         <button name="details" disabled>Details</button>
-                        <button name="cancel" disabled>End Renting</button>
-                    @elseif($slot->status === 'served')
+                        <form action="{{ route('end-renting-admin', ['slot' => $slot->id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" name="cancel">End Renting</button>
+                        </form>
+                    @elseif($slot->status === 'reserved')
                         <button name="details" disabled>Details</button>
                         <button name="cancel" disabled>Cancel Reservation</button>
                     @endif

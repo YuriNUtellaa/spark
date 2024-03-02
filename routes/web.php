@@ -23,9 +23,18 @@ use App\Http\Controllers\SlotsController;
     Route::get('/slots-control-admin', [AdminController::class, 'showAdminSlot'])->name('slots-control-admin');
     Route::post('/logout-admin', [AdminController::class, 'logout'])->name('logout-admin');
 
-    // RENTING AN IRREGULAR USER
+    // SLOT CONTROL FOR IRREGULAR USER
 
-        Route::post('/confirm-rent-admin', [SlotsController::class, 'confirmRentAdmin'])->name('confirm-rent-admin');
+        //RENT
+            Route::get('/rent-admin/{slot}', [SlotsController::class, 'showRentAdminForm'])->name('rentAdmin');
+            Route::post('/confirm-rent-admin', [SlotsController::class, 'confirmRentAdmin'])->name('confirmRentAdmin');
+            Route::put('/end-renting-admin/{slot}', [SlotsController::class, 'endRentingAdmin'])->name('end-renting-admin');
+
+        // RESERVE
+            Route::get('/reserve-admin/{slot}', [SlotsController::class, 'showReserveAdminForm'])->name('reserveAdmin');
+            Route::post('/confirm-reserve-admin', [SlotsController::class, 'confirmReserveAdmin'])->name('confirm-reserve-admin');
+
+
 
 // FOR USER INTERFACE ////////////////////////////////////
 
@@ -38,7 +47,6 @@ use App\Http\Controllers\SlotsController;
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
     // RENT 
-
         Route::get('/rent/{slot}', [SlotsController::class, 'showRentForm'])->name('rent');
         Route::post('/confirm-rent', [SlotsController::class, 'confirmRent'])->name('confirm-rent');
 

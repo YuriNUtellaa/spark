@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Slot;
 use App\Models\SlotRental;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User;
 
 class SlotsController extends Controller
 {
@@ -78,7 +80,18 @@ class SlotsController extends Controller
         return redirect()->back()->with('success', 'Rental ended successfully.');
     }
 
+
+
+
 // ADMIN SIDE //////////////////////////////////////////////////////////////
+
+
+    // RENT
+    public function showRentAdminForm($slotId)
+    {
+        $slot = Slot::findOrFail($slotId);
+        return view('Admin.rentAdmin', compact('slot'));
+    }
 
     public function confirmRentAdmin(Request $request)
     {
@@ -86,15 +99,13 @@ class SlotsController extends Controller
         $request->validate([
             'slot_id' => 'required',
             'username' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'plate_number' => 'required|unique:users',
         ]);
 
         // Create a new user with type "irregular"
         $user = new User();
         $user->username = $request->username;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->plate_number = $request->plate_number;
         $user->type = 'irregular';
         $user->save();
 
@@ -114,6 +125,65 @@ class SlotsController extends Controller
         // Redirect to the admin slots control page after successful rental
         return redirect()->route('slots-control-admin')->with('success', 'Slot rented successfully to irregular user.');
     }
+
+    public function endRentingAdmin(Request $request, $slotId)
+    {
+        // Find the slot rental record
+        $slotRental = SlotRental::where('slot_id', $slotId)
+            ->whereNull('end_time')
+            ->first();
+
+        if (!$slotRental) {
+            // No active rental found for the slot, return with an error message
+            return redirect()->back()->withErrors(['error' => 'No active rental found for the specified slot.']);
+        }
+
+        // Update end time and update slot status
+        $slotRental->update(['end_time' => now()]);
+        $slot = Slot::findOrFail($slotId);
+        $slot->update(['status' => 'available']);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Renting ended successfully.');
+    }
+
+    // RESERVE 
+    public function showReserveAdminForm($slotId)
+    {
+        $slot = Slot::findOrFail($slotId);
+        $regularUsers = User::where('type', 'regular')->get();
+        return view('Admin.reserveAdmin', compact('slot', 'regularUsers'));
+    }
+
+    public function confirmReserveAdmin(Request $request)
+    {
+        // Validate the form inputs
+        $request->validate([
+            'slot_id' => 'required',
+            'user_id' => 'required|exists:users,id,type,regular',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+    
+        // Update the slot status
+        $slot = Slot::findOrFail($request->slot_id);
+        $slot->status = 'reserved';
+        $slot->updated_at = now();
+        $slot->save();
+    
+        // Create a new Reservation record
+        $reservation = new Reservation();
+        $reservation->slot_id = $slot->id;
+        $reservation->user_id = $request->user_id;
+        $reservation->start_time = $request->start_time;
+        $reservation->end_time = $request->end_time;
+        $reservation->save();
+    
+        // Redirect to the admin slots control page after successful reservation
+        return redirect()->route('slots-control-admin')->with('success', 'Slot reserved successfully for regular user.');
+    }
+    
+
 
     
 
