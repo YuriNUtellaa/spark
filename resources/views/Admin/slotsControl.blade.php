@@ -14,18 +14,18 @@
                     <h2>{{$slot->slot_number}}</h2>
                     <h5>{{$slot->status}}</h5>
 
-                    {{-- @php
+                    @php
                         $rental = $slot->currentRental();
                         $reservation = $slot->currentReservation();
                     @endphp
 
-                    @if($slot->status === 'occupied')
+                    @if($slot->status === 'occupied' && $rental)
                         <span>Rented by: </span><p>{{ $rental->user->username }}</p>
                     @elseif($slot->status === 'reserved')
                         <span>Reserved by: </span><p>{{ $reservation->user->username }}</p>
                     @else
-                        <span>Reserved by:</span><p>None</p>
-                    @endif --}}
+                        <span>Rented/Reserved by:</span><p>None</p>
+                    @endif
 
                     {{-- @if($slot->status === 'reserved')
                         @php

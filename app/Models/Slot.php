@@ -11,8 +11,9 @@ class Slot extends Model
 
     public function currentReservation()
     {
-        return $this->reservations()->whereNull('end_time')->first();
+        return $this->reservations()->where('end_time', '>=', now())->first();
     }
+
 
     public function reservations()
     {
