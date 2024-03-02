@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('reservations:update-expired')->hourly(); // Adjust the frequency as needed
+        $schedule->command('reservations:update-expired')->everyMinute();
     }
     
 

@@ -21,15 +21,16 @@
     
 </head>
 
-
 <header>
     {{-- FOR ADMIN --}}
     @auth('admin')
         <a href="/home" class="logo"><img src="layouts/SPark-logos_white_admin.png" alt=""></a>
         <ul class="navmenu">
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="/slots-control-admin">Slot Control</a></li>
-            <li><a href="/">User Management</a></li>
+            <li><a href="/">Home</a></li> |
+            <li><a href="/slots-control-admin">Slot Control</a></li> |
+            <li><a href="/">User Management</a></li> |
+            <li><a href="/">Rent & Reservation</a></li> |
+            <li><a href="/">Summary Report</a></li>
         </ul>
         <div class="nav-icon">
             <form action="/logout-admin" method="POST">

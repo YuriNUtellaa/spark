@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Slot;
 use App\Models\Admin;
+use App\Models\SlotRental;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,12 +18,12 @@ class AdminController extends Controller
     public function showAdminSlot()
     {
         $slots = Slot::all();
-        return view('Admin.slotsControl', compact('slots'));
+        $rentals = SlotRental::with('user')->whereNull('end_time')->get();
+        return view('Admin.slotsControl', compact('slots', 'rentals'));
     }
 
     public function login(Request $request)
     {
-        // Validate the user input
         $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required',
@@ -30,11 +31,9 @@ class AdminController extends Controller
     
         // Attempt to authenticate the admin
         if (Auth::guard('admin')->attempt($credentials)) {
-            // Authentication successful
             return redirect()->intended('/slots-control-admin');
         }
-    
-        // Authentication failed
+
         return back()->withErrors(['error' => 'Invalid credentials']);
     }
 
@@ -66,7 +65,6 @@ class AdminController extends Controller
         $admin = new Admin();
         $admin->username = $request->username;
         $admin->password = $hashedPassword;
-        // Populate other admin fields if needed
 
         // Save the admin to the database
         $admin->save();

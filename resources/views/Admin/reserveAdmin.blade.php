@@ -3,9 +3,12 @@
 
 <body>
 
-  <section class="section-reserve">
+  @auth('admin')
+      
+  
+  <section class="section-rent">
     
-    <div class="reserve">
+    <div class="rent">
       <h2>Reserve Slot</h2>
       <h3>Slot Number: {{ $slot->slot_number }}</h3>
       <p>Status: {{ $slot->status }}</p>
@@ -27,6 +30,6 @@
     </div>
 
   </section>
-
+@endauth
 </body>
 </html>

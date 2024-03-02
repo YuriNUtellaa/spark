@@ -9,6 +9,26 @@ class Slot extends Model
 {
     use HasFactory;
 
+    public function currentReservation()
+    {
+        return $this->reservations()->whereNull('end_time')->first();
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+    
+    public function currentRental()
+    {
+        return $this->rentals()->whereNull('end_time')->first();
+    }
+
+    public function rentals()
+    {
+        return $this->hasMany(SlotRental::class);
+    }
+
     /**
      * The table associated with the model.
      *
