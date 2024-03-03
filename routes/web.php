@@ -36,18 +36,22 @@ use App\Http\Controllers\SlotsController;
 
 
     // RENT & RESERVATIONS
-    
+
     Route::middleware('auth:admin')->group(function () {
         // Route for showing the history page
         Route::get('/history-admin', [AdminController::class, 'showAdminHistory'])->name('history-admin');
-    
+
         // Routes for updating and deleting slot rentals
         Route::get('/update-slot-rental/{id}', [AdminController::class, 'updateSlotRental'])->name('update-slot-rental');
         Route::delete('/delete-slot-rental/{id}', [AdminController::class, 'deleteSlotRental'])->name('delete-slot-rental');
-    
-        // Routes for updating and deleting reservations
-        Route::get('/update-reservation/{id}', [AdminController::class, 'updateReservation'])->name('update-reservation');
-        Route::delete('/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('delete-reservation');
+
+        // Routes for updating sa rent and reservation
+        Route::put('/update-slot-rental/{id}', [AdminController::class, 'updateSlotRental'])->name('update-slot-rental');
+Route::put('/update-reservation/{id}', [AdminController::class, 'updateReservation'])->name('update-reservation');
+
+        // DELETE FUNCTION PARA SA RENT AND RESERVATION
+        Route::delete('/delete-slot-rental/{id}', [AdminController::class, 'deleteSlotRental'])->name('delete-slot-rental');
+Route::delete('/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('delete-reservation');
     });
 
 
@@ -62,8 +66,7 @@ use App\Http\Controllers\SlotsController;
 
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-    // RENT 
+    // RENT
         Route::get('/rent/{slot}', [SlotsController::class, 'showRentForm'])->name('rent');
         Route::post('/confirm-rent', [SlotsController::class, 'confirmRent'])->name('confirm-rent');
 
-    

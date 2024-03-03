@@ -30,7 +30,7 @@ class AdminController extends Controller
             'username' => 'required',
             'password' => 'required',
         ]);
-    
+
         if (Auth::guard('admin')->attempt($credentials)) {
             return redirect()->intended('/slots-control-admin');
         } else {
@@ -57,13 +57,13 @@ class AdminController extends Controller
             'username' => 'required|unique:admins',
             'password' => 'required|min:6',
         ]);
-    
+
         try {
             $admin = new Admin();
             $admin->username = $request->username;
             $admin->password = bcrypt($request->password);
             $admin->save();
-    
+
             return redirect()->route('login-admin')->with('success', 'Admin registration successful. Please log in.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Failed to register admin. Please try again.']);
@@ -80,5 +80,54 @@ class AdminController extends Controller
         return view('Admin.historyAdmin', compact('slotRentals', 'reservations'));
     }
 
+    // DELETE FUNCTION PARA SA RENT AND RESERVATION HISTORY
+
+
+    public function deleteSlotRental($id)
+    {
+        $slotRental = SlotRental::findOrFail($id);
+        $slotRental->delete();
+        return back()->with('success', 'Slot rental deleted successfully.');
+    }
+
+    public function deleteReservation($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+        return back()->with('success', 'Reservation deleted successfully.');
+    }
+   // In AdminController.php
+
+public function updateSlotRental(Request $request, $id)
+{
+    $request->validate([
+        'start_time' => 'required|date',
+        'end_time' => 'required|date|after_or_equal:start_time',
+    ]);
+
+    $slotRental = SlotRental::findOrFail($id);
+    $slotRental->update([
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+    ]);
+
+    return back()->with('success', 'Slot rental updated successfully.');
+}
+
+public function updateReservation(Request $request, $id)
+{
+    $request->validate([
+        'start_time' => 'required|date',
+        'end_time' => 'required|date|after_or_equal:start_time',
+    ]);
+
+    $reservation = Reservation::findOrFail($id);
+    $reservation->update([
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+    ]);
+
+    return back()->with('success', 'Reservation updated successfully.');
+}
 
 }
