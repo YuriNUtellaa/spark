@@ -18,7 +18,10 @@
                                 <form action="{{ route('rent', ['slot' => $slot->id]) }}" method="GET">
                                     <button type="submit" name="rent">Rent</button>
                                 </form>
-                                <button name="reserve">Reserve</button>
+                                <form action="{{ route('reserve', ['slot' => $slot->id]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" name="reserve">Reserve</button>
+                                </form>
                             @elseif($slot->status === 'occupied')
                                 <button name="details" disabled>Details</button>
                             @elseif($slot->status === 'reserved')

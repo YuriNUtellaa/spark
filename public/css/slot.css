@@ -1,7 +1,6 @@
 section.home-section {
     margin-top: 70px;
-    height: auto; /* Change height to auto */
-    overflow: hidden; /* Optionally add overflow to handle floated or absolutely positioned children */
+    height: auto;
     background-color: #eee;
 }
 

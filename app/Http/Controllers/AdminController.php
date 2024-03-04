@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Slot;
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\SlotRental;
 use App\Models\Reservation;
@@ -80,54 +81,102 @@ class AdminController extends Controller
         return view('Admin.historyAdmin', compact('slotRentals', 'reservations'));
     }
 
-    // DELETE FUNCTION PARA SA RENT AND RESERVATION HISTORY
+        // DELETE FUNCTION
 
+            public function deleteSlotRental($id)
+            {
+                $slotRental = SlotRental::findOrFail($id);
+                $slotRental->delete();
+                return back()->with('success', 'Slot rental deleted successfully.');
+            }
 
-    public function deleteSlotRental($id)
+            public function deleteReservation($id)
+            {
+                $reservation = Reservation::findOrFail($id);
+                $reservation->delete();
+                return back()->with('success', 'Reservation deleted successfully.');
+            }
+
+        // UPDATE FUNCTION
+
+            public function updateSlotRental(Request $request, $id)
+            {
+                $request->validate([
+                    'start_time' => 'required|date',
+                    'end_time' => 'required|date|after_or_equal:start_time',
+                ]);
+
+                $slotRental = SlotRental::findOrFail($id);
+                $slotRental->update([
+                    'start_time' => $request->start_time,
+                    'end_time' => $request->end_time,
+                ]);
+
+                return back()->with('success', 'Slot rental updated successfully.');
+            }
+
+            public function updateReservation(Request $request, $id)
+            {
+                $request->validate([
+                    'start_time' => 'required|date',
+                    'end_time' => 'required|date|after_or_equal:start_time',
+                ]);
+
+                $reservation = Reservation::findOrFail($id);
+                $reservation->update([
+                    'start_time' => $request->start_time,
+                    'end_time' => $request->end_time,
+                ]);
+
+                return back()->with('success', 'Reservation updated successfully.');
+            }
+
+    // USERMANAGEMENT
+
+    public function showUserManagement()
     {
-        $slotRental = SlotRental::findOrFail($id);
-        $slotRental->delete();
-        return back()->with('success', 'Slot rental deleted successfully.');
+        $users = User::all(); // Fetch all users
+        return view('Admin/usermanagementAdmin', compact('users')); // Pass users to the view
     }
 
-    public function deleteReservation($id)
+    public function updateUser(Request $request, User $user)
     {
-        $reservation = Reservation::findOrFail($id);
-        $reservation->delete();
-        return back()->with('success', 'Reservation deleted successfully.');
+        // Validate the input
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'sometimes|nullable|min:6',
+            'plate_number' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        // Update the user
+        $user->username = $validatedData['username'];
+        $user->email = $validatedData['email'];
+        if ($validatedData['password']) {
+            $user->password = bcrypt($validatedData['password']);
+        }
+        $user->plate_number = $validatedData['plate_number'];
+        $user->type = $validatedData['type'];
+    
+        if ($request->hasFile('image')) {
+            $imageName = $user->id . '_' . time() . '.' . $request->image->extension();
+            $request->image->move(public_path('profiles'), $imageName);
+            $user->image = $imageName;
+        }
+    
+        $user->save();
+    
+        return redirect()->route('admin.user-management')->with('success', 'User updated successfully.');
     }
-   // In AdminController.php
+    
+    public function deleteUser(User $user)
+        {
+            $user->delete(); // This deletes the user from the database
+            return redirect()->route('admin.user-management')->with('success', 'User deleted successfully.');
+        }
+    
 
-public function updateSlotRental(Request $request, $id)
-{
-    $request->validate([
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after_or_equal:start_time',
-    ]);
-
-    $slotRental = SlotRental::findOrFail($id);
-    $slotRental->update([
-        'start_time' => $request->start_time,
-        'end_time' => $request->end_time,
-    ]);
-
-    return back()->with('success', 'Slot rental updated successfully.');
-}
-
-public function updateReservation(Request $request, $id)
-{
-    $request->validate([
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after_or_equal:start_time',
-    ]);
-
-    $reservation = Reservation::findOrFail($id);
-    $reservation->update([
-        'start_time' => $request->start_time,
-        'end_time' => $request->end_time,
-    ]);
-
-    return back()->with('success', 'Reservation updated successfully.');
-}
-
+    
 }
