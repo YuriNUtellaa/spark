@@ -205,11 +205,11 @@ tr:nth-child(even) {
 }
 
 
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="file"],
-select {
+.user-management-table input[type="text"],
+.user-management-table input[type="password"],
+.user-management-table input[type="email"],
+.user-management-table input[type="file"],
+.user-management-table select {
     font-size: 0.8rem;
     padding: 5px 10px;
     margin: 2px 0;
