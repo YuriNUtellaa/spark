@@ -16,14 +16,23 @@
                             <span>Updated At: </span><p>{{$slot->updated_at}}</p>
                             @if($slot->status === 'available')
                                 <form action="{{ route('rent', ['slot' => $slot->id]) }}" method="GET">
-                                    <button type="submit" name="rent">Rent</button>
+                                    <button type="submit" name="blue">Rent</button>
                                 </form>
                                 <form action="{{ route('reserve', ['slot' => $slot->id]) }}" method="POST">
                                     @csrf
-                                    <button type="submit" name="reserve">Reserve</button>
+                                    <button type="submit" name="orange">Reserve</button>
                                 </form>
                             @elseif($slot->status === 'occupied')
                                 <button name="details" disabled>Details</button>
+                                @if(auth()->check() && $slot->currentRental()->user_id == auth()->id())
+                                    <form action="{{ route('end-renting', ['slot' => $slot->id]) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" name="cancel">End Renting</button>
+                                    </form>
+                                @else
+                                    <button type="submit" name="gray">End</button>
+                                @endif
                             @elseif($slot->status === 'reserved')
                                 <button name="details" disabled>Details</button>
                             @endif

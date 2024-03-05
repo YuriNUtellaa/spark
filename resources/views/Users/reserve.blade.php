@@ -26,7 +26,7 @@
         <label for="end_time">End Time:</label>
         <input type="datetime-local" id="end_time" name="end_time" required>
         
-        <button type="submit" name="reserve">Confirm Reservation</button>
+        <button type="submit" name="orange">Confirm Reservation</button>
         <a href="{{ route('slots') }}" style="color: rgb(232, 113, 33)">Back</a>
       </form>
     </div>

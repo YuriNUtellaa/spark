@@ -64,65 +64,66 @@ class SlotsController extends Controller
         return redirect()->route('slots')->with('success', 'Slot rented successfully.');
     }
     
-    public function endRent(Request $request)
+    public function endRent(Request $request, $slotId)
     {
         // Find the slot rental record
-        $slotRental = SlotRental::where('slot_id', $request->slot_id)
-            ->where('user_id', auth()->id())
-            ->whereNull('end_time') // Only consider rentals that are still active
+        $slotRental = SlotRental::where('slot_id', $slotId)
+            ->whereNull('end_time')
             ->first();
-    
+
         if (!$slotRental) {
+            // No active rental found for the slot, return with an error message
             return redirect()->back()->withErrors(['error' => 'No active rental found for the specified slot.']);
         }
-    
+
         // Update end time and update slot status
         $slotRental->update(['end_time' => now()]);
-        $slot = Slot::findOrFail($request->slot_id);
+        $slot = Slot::findOrFail($slotId);
         $slot->update(['status' => 'available']);
-    
+
         // Redirect back with a success message
-        return redirect()->back()->with('success', 'Rental ended successfully.');
+        return redirect()->back()->with('success', 'Renting ended successfully.');
     }
+    
 
     public function confirmReserve(Request $request)
-{
-    // Check if the user already has an active reservation
-    $alreadyReserved = Reservation::where('user_id', auth()->id())
-        ->whereNull('end_time')
-        ->exists();
+    {
+        // Check if the user already has an active reservation
+        $alreadyReserved = Reservation::where('user_id', auth()->id())
+            ->whereNull('end_time')
+            ->exists();
 
-    if ($alreadyReserved) {
-        return redirect()->back()->withErrors(['error' => 'You already have an active reservation.']);
+        if ($alreadyReserved) {
+            return redirect()->back()->withErrors(['error' => 'You already have an active reservation.']);
+        }
+
+        // Validate the form inputs
+        $request->validate([
+            'slot_id' => 'required',
+            'user_id' => 'required',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        // Proceed with reserving the slot
+        $slot = Slot::findOrFail($request->slot_id);
+
+        // Update slot details
+        $slot->status = 'reserved';
+        $slot->updated_at = now();
+        $slot->save();
+
+        // Create a new Reservation record
+        $reservation = new Reservation();
+        $reservation->slot_id = $slot->id;
+        $reservation->user_id = auth()->id();
+        $reservation->start_time = $request->start_time;
+        $reservation->end_time = $request->end_time;
+        $reservation->save();
+
+        // Redirect to the slots page after successful reservation
+        return redirect()->route('slots')->with('success', 'Slot reserved successfully.');
     }
-
-    // Validate the form inputs
-    $request->validate([
-        'slot_id' => 'required',
-        'user_id' => 'required',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
-    ]);
-
-    // Proceed with reserving the slot
-    $slot = Slot::findOrFail($request->slot_id);
-
-    // Update slot details
-    $slot->status = 'reserved';
-    $slot->updated_at = now();
-    $slot->save();
-
-    // Create a new Reservation record
-    $reservation = new Reservation();
-    $reservation->slot_id = $slot->id;
-    $reservation->user_id = auth()->id();
-    $reservation->start_time = $request->start_time;
-    $reservation->end_time = $request->end_time;
-    $reservation->save();
-
-    // Redirect to the slots page after successful reservation
-    return redirect()->route('slots')->with('success', 'Slot reserved successfully.');
-}
 
     
 

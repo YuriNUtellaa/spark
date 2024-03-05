@@ -25,7 +25,7 @@
         <input type="datetime-local" id="start_time" name="start_time" required>
         <label for="end_time">End Time:</label>
         <input type="datetime-local" id="end_time" name="end_time" required>
-        <button type="submit" name="reserve">Confirm Reservation</button>
+        <button type="submit" name="orange">Confirm Reservation</button>
       </form>
     </div>
 

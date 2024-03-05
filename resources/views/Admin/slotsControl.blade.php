@@ -27,34 +27,15 @@
                         <span>Rented/Reserved by:</span><p>None</p>
                     @endif
 
-                    {{-- @if($slot->status === 'reserved')
-                        @php
-                            
-                        @endphp
-
-                        @if($reservation)
-                            <span>Reserved by: </span><p>{{ $reservation->user->username }}</p>
-                        @else
-                            <span>Reserved by:</span><p>None</p>
-                        @endif
-
-                    @endif
-
-                    @if($rental)
-                        <span>Rented by: </span><p>{{ $rental->user->username }}</p>
-                    @else
-                        <span>Rented by:</span><p>None</p>
-                    @endif --}}
-
                     <span>Updated At: </span>
                     <p>{{$slot->updated_at}}</p>
 
                     @if($slot->status === 'available')
                         <form action="{{ route('rentAdmin', ['slot' => $slot->id]) }}" method="GET">
-                            <button type="submit" name="rent">Rent a User</button>
+                            <button type="submit" name="blue">Rent a User</button>
                         </form>
                         <form action="{{ route('reserveAdmin', ['slot' => $slot->id]) }}" method="GET">
-                            <button type="submit" name="reserve">Reserve a User</button>
+                            <button type="submit" name="orange">Reserve a User</button>
                         </form>
                     @elseif($slot->status === 'occupied')
                         <button name="details" disabled>Details</button>

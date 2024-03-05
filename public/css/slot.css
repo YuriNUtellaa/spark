@@ -196,7 +196,7 @@ div.overall-slots{
 /* BUTTONS */
 
 
-button[name="rent"]{
+button[name="blue"]{
     width: 180px;
     background-color: #fff;
     border: 3px solid rgb(74, 83, 118);
@@ -210,7 +210,7 @@ button[name="rent"]{
     transition: all 0.3s;
 }
 
-button[name="reserve"] {
+button[name="orange"] {
     width: 180px;
     background-color: #fff;
     border: 3px solid rgb(232, 113, 33);
@@ -237,6 +237,19 @@ button[name="details"]{
     transition: all 0.3s;
 }
 
+button[name="gray"]{
+    width: 180px;
+    background-color: #fff;
+    border: 3px solid rgb(128, 128, 128);
+    color: rgb(128, 128, 128);
+    padding: 3%;
+    text-align: center;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
 button[name="cancel"] {
     width: 180px;
     background-color: #fff;
@@ -250,14 +263,14 @@ button[name="cancel"] {
     transition: all 0.3s;
 }
 
-button[name="rent"]:hover{
+button[name="blue"]:hover{
     background-color: rgb(74, 83, 118);
     border: solid 3px rgb(74, 83, 118);
     transform: scale(0.97);
     color: #fff;
 }
 
-button[name="reserve"]:hover {
+button[name="orange"]:hover {
     background-color: rgb(232, 113, 33);
     transform: scale(0.97);
     color: #fff;
@@ -275,3 +288,23 @@ button[name="cancel"]:hover {
     transform: scale(0.97);
     color: #fff;
 }
+
+/* INPUT FOR RESERVATION */
+
+    input[name="start_time"]{
+        width: 180px;
+        margin: 4px 2px;
+        text-align: center;
+        padding: auto;
+        border: solid 3px rgb(74, 83, 118);
+        color: rgb(74, 83, 118);
+    }
+
+    input[name="end_time"]{
+        width: 180px;
+        margin: 4px 2px;
+        text-align: center;
+        padding: auto;
+        border: solid 3px rgb(232, 113, 33);
+        color: rgb(232, 113, 33);
+    }
