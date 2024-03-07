@@ -19,8 +19,12 @@
                 <label for="plate_number">Plate Number:</label>
                 <input type="text" name="plate_number" id="plate_number" required>
             </div>
-            <button type="submit">Confirm Rental</button>
-            <a href="{{ route('slots-control-admin') }}" style="color: rgb(232, 113, 33)">Back</a>
+
+            <button name="confirmRentAdmin" type="submit">Confirm Rental</button>
+
+            <div class="back">
+                <a href="{{ route('slots-control-admin') }}" style="color: rgb(232, 113, 33)">Back</a>
+            </div>
         </form>
     </div>
 </section>

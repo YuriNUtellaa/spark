@@ -27,7 +27,7 @@
               <h1>SYSTEM 2024</h1>
               <p>Advanced renting system!</p>
 
-              <a href="/" class="main-btn">Rent Now! <i class='bx bxs-chevron-right'></i></a>
+              <a href="/slots" class="main-btn">Rent Now! <i class='bx bxs-chevron-right'></i></a>
           </div>
         </section>
 
@@ -40,7 +40,7 @@
               <h1>SYSTEM 2024</h1>
               <p>Advanced renting system!</p>
 
-              <a href="/" class="main-btn">Rent Now! <i class='bx bxs-chevron-right'></i></a>
+              <a href="/slots" class="main-btn">Rent Now! <i class='bx bxs-chevron-right'></i></a>
           </div>
         </section>
 

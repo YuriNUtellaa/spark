@@ -3,16 +3,16 @@
 
 <body>
 
-  <section class="section-rent">
+  <section class="section-reserve">
     
-    <div class="rent">
+    <div class="reserve">
       <h2>Reserve Slot</h2>
       <h3>Slot Number: {{ $slot->slot_number }}</h3>
       <p>Status: {{ $slot->status }}</p>
 
       @if ($errors->any())
         <div class="error-message">
-          <p name="error">{{ $errors->first('error') }}</p>
+          <span>{{ $errors->first('error') }}</span>
         </div>
       @endif
 
@@ -26,9 +26,13 @@
         <label for="end_time">End Time:</label>
         <input type="datetime-local" id="end_time" name="end_time" required>
         
-        <button type="submit" name="orange">Confirm Reservation</button>
-        <a href="{{ route('slots') }}" style="color: rgb(232, 113, 33)">Back</a>
+        <div class="confirm">
+          <button type="submit" name="orange">Confirm Reservation</button>
+        </div>
+        
+
       </form>
+      <a href="{{ route('slots') }}" style="color: rgb(232, 113, 33)">Back</a>
     </div>
 
   </section>

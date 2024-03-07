@@ -8,6 +8,13 @@
         <section class="home-section">
             <div class="overall-slots">
                 <h2 name="heading">ALL SLOTS</h2>
+
+                @if (session('success'))
+                    <div class="success-message">
+                        <span>{{ session('success') }}</span>
+                    </div>
+                @endif
+                
                 <div class="slots">
                     @foreach($slots as $slot)
                         <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'reserved') reserved @else available @endif">

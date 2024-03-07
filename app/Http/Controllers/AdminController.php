@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+
 use App\Models\Slot;
 use App\Models\User;
 use App\Models\Admin;
@@ -178,5 +180,94 @@ class AdminController extends Controller
         }
     
 
+    // SUMMARY
+
+    public function showSummary() {
+        $ratePerHour = 50;
+        $fixedMonthlyPayment = 4500;
+    
+        $rentals = SlotRental::with(['user', 'slot'])
+                        ->selectRaw('slot_rentals.id, slot_rentals.slot_id, user_id, SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
+                        ->groupBy('slot_rentals.id', 'slot_rentals.slot_id', 'user_id')
+                        ->get()
+                        ->each(function ($rental) use ($ratePerHour) {
+                            $rental->per_hour_rate = $ratePerHour;
+                            $rental->total = $rental->total_hours * $ratePerHour;
+                        });
+    
+        $reservations = Reservation::with(['user', 'slot'])
+                        ->selectRaw('reservations.id, reservations.slot_id, user_id, SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
+                        ->groupBy('reservations.id', 'reservations.slot_id', 'user_id')
+                        ->get()
+                        ->each(function ($reservation) use ($ratePerHour) {
+                            $reservation->per_hour_rate = $ratePerHour;
+                            $reservation->total = $reservation->total_hours * $ratePerHour;
+                        });
+    
+        $grandTotalRental = $rentals->sum('total');
+        $grandTotalReservation = $reservations->sum('total');
+    
+        $regularUsers = User::where('type', 'regular')
+                        ->with('slot') 
+                        ->get()
+                        ->each(function ($user) use ($fixedMonthlyPayment) {
+                            $user->monthly_payment = $fixedMonthlyPayment;
+                            $user->slot_id = $user->slot ? $user->slot->id : 'No slot'; 
+                        });
+    
+        $grandTotalRegular = $regularUsers->sum('monthly_payment');
+    
+        return view('Admin.summary', [
+            'rentals' => $rentals,
+            'reservations' => $reservations,
+            'regularUsers' => $regularUsers,
+            'grandTotalRental' => $grandTotalRental,
+            'grandTotalReservation' => $grandTotalReservation,
+            'grandTotalRegular' => $grandTotalRegular
+        ]);
+    }
+
+    
+    public function generateSummaryReportPDF() {
+        // Prepare the data para sa pdf
+        $rentals = SlotRental::with(['user', 'slot'])
+                        ->selectRaw('slot_rentals.id, slot_rentals.slot_id, user_id,
+                                    SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
+                        ->groupBy('slot_rentals.id', 'slot_rentals.slot_id', 'user_id')
+                        ->get()
+                        ->each(function ($rental) {
+                            $rental->per_hour_rate = 50; // 50 pesos per hour
+                            $rental->total = $rental->total_hours * $rental->per_hour_rate;
+                        });
+    
+        $reservations = Reservation::with(['user', 'slot'])
+                        ->selectRaw('reservations.id, reservations.slot_id, user_id,
+                                    SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
+                        ->groupBy('reservations.id', 'reservations.slot_id', 'user_id')
+                        ->get()
+                        ->each(function ($reservation) {
+                            $reservation->per_hour_rate = 50; // 50 pesos per hour
+                            $reservation->total = $reservation->total_hours * $reservation->per_hour_rate;
+                        });
+    
+        $regularUsers = User::where('type', 'regular')
+                        ->get()
+                        ->each(function ($user) {
+                            $user->monthly_payment = 4500; // Fixed monthly payment for regular users
+                        });
+    
+        $data = [
+            'rentals' => $rentals,
+            'reservations' => $reservations,
+            'regularUsers' => $regularUsers,
+            'grandTotalRental' => $rentals->sum('total'),
+            'grandTotalReservation' => $reservations->sum('total'),
+            'grandTotalRegular' => $regularUsers->sum('monthly_payment')
+        ];
+    
+        //return view('pdf.summary', $data); // VIEW
+        $pdf = PDF::loadView('pdf.summary', $data); // LOAD
+        return $pdf->download('summary-report.pdf'); // DOWNLOAD
+    }
     
 }

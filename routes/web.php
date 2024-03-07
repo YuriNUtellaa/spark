@@ -82,10 +82,23 @@ use App\Http\Controllers\SlotsController;
 
         Route::put('/end-renting/{slot}', [SlotsController::class, 'endRent'])->name('end-renting');
 
-
     // RESERVE
 
         Route::post('/reserve/{slot}', [SlotsController::class, 'showReserveForm'])->name('reserve');
         Route::post('/confirm-reserve', [SlotsController::class, 'confirmReserve'])->name('confirm-reserve');
 
 
+    // SUMMARY
+
+        Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/summary', [AdminController::class, 'showSummary']);
+        Route::get('/admin/generate-summary-report', [AdminController::class, 'generateSummaryReportPDF'])
+            ->name('admin.generate-summary-report');
+    });
+
+    // PROFILE
+
+        Route::get('/userprofile', [UserController::class, 'showuserprofile']);
+        Route::get('/userprofile', [UserController::class, 'showuserprofile'])->name('userprofile');
+        Route::put('/userprofile', [UserController::class, 'update'])->name('user.update');
+        Route::put('/userprofile/deactivate', [UserController::class, 'deactivate'])->name('user.deactivate');

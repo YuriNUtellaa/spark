@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reservation extends Model
 {
     protected $fillable = ['user_id', 'slot_id', 'start_time', 'end_time'];
-    
+
     // Define relationships
     public function user()
     {
@@ -23,7 +23,9 @@ class Reservation extends Model
     public function setStartAndEndTime()
     {
         $this->start_time = now();
-        $this->end_time = now()->addHours(config('reservation.duration_hours')); // Assuming duration_hours is defined in your config
+        $this->end_time = now()->addHours(config('reservation.duration_hours'));
     }
+
 }
+
 

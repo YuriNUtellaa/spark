@@ -186,8 +186,8 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        width: 250px;
-        min-height: 270px;
+        width: 350px;
+        min-height: 350px;
         margin: 3%;
         transition: all .4s;
         border: 3px solid rgb(74, 83, 118);
@@ -198,8 +198,23 @@
         box-shadow: 0px 0px 0px 10px rgba(210, 198, 198, 0.08);
     }
 
+    .rent p{
+        padding-bottom: 20px;
+    }
+
+    .rent label{
+        min-width: 50%;
+        padding: 20px;
+    }
+
+    .rent input{
+        width: 50%;
+        margin: auto 5px 0;
+
+    }
+
     .rent h2{
-        width: 215px;
+        width: 90%;
         position: absolute;
         top: 20px;
         left: 13px;
@@ -227,13 +242,122 @@
         transition: all 0.3s;
     }
 
-    .error-message{
-        background-color: red;
-        color: #fff;
-        font-size: 15px;
-        margin: 15px 0 0 0;
-        padding: 10px;
-        text-align: center;
+/* NEW /////////////////////////////////////////////// */
+
+    .userporfile {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .userporfile i {
+        color: #ffffff;
+        font-size: 24px;
+    }
+    /* User Profile CSS */
+
+    .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Adjusted height for your view */
+    background-color: #f7f7f7; /* Background color for the content area */
+    }
+
+    .user-profile-container {
+    width: 60%; /* Adjust width as needed */
+    max-width: 800px; /* Maximum width of the container */
+    background: #fff;
+    padding: 2em;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px; /* Space from the top */
+    }
+
+    .user-profile-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1em;
+    }
+
+    .user-profile-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    }
+
+    .user-profile-container label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    color: #444;
+    }
+
+    .user-profile-container input[type="text"],
+    .user-profile-container input[type="email"],
+    .user-profile-container input[type="password"],
+    .user-profile-container input[type="file"] {
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    }
+
+    .user-profile-container input[type="file"] {
+    padding: 0.5em;
+    }
+
+    .user-profile-container button {
+    padding: 1em;
+    background-color: rgb(232, 113, 33);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    }
+
+    .user-profile-container button:hover {
+    background-color: rgb(74, 83, 118);
+    }
+
+    /* Deactivate Account Button */
+    .user-profile-container form:last-child button {
+    background-color: #ff6666;
+    margin-top: 1em;
+    }
+
+    .user-profile-container form:last-child button:hover {
+    background-color: #ff4d4d;
+    }
+    .alert-success {
+    text-align: center;
+    color: green;
+    font-size: 1.2em;
+    margin-top: 1em;
+    }
+
+
+    .current-profile-image {
+    text-align: center;
+    margin-bottom: 20px;
+    }
+
+    .current-profile-image img {
+    width: 100px; /* Or your preferred size */
+    height: 100px; /* Maintain the aspect ratio */
+    border-radius: 50%;
+    object-fit: cover; /* This will prevent distortion of the image */
+    }
+
+    /* Style updates for the profile update button */
+    .update-profile-button {
+    background-color: pink;
+    }
+    .update-profile-button:hover {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
     }
 
 

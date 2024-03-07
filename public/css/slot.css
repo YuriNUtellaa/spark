@@ -1,6 +1,7 @@
 section.home-section {
     margin-top: 70px;
     height: auto;
+    padding-top: 100px;
     background-color: #eee;
 }
 
@@ -291,20 +292,139 @@ button[name="cancel"]:hover {
 
 /* INPUT FOR RESERVATION */
 
-    input[name="start_time"]{
+    .section-reserve{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        background-color: #eee;
+     }
+ 
+     .reserve{
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         position: relative;
+         width: 350px;
+         min-height: 270px;
+         margin: 3%;
+         transition: all .4s;
+         border: 3px solid rgb(74, 83, 118);
+         background-color: #fff;
+         padding: 30px;
+         padding-top: 90px;
+         padding-bottom: 15px;
+         box-shadow: 0px 0px 0px 10px rgba(210, 198, 198, 0.08);
+     }
+
+     .reserve p{
+        margin-bottom: 20px;
+     }
+ 
+     .reserve h2{
+         width: 90%;
+         position: absolute;
+         top: 20px;
+         left: 13px;
+         background-color: rgb(232, 113, 33);
+         color: #fff;
+         padding: 3%;
+         text-align: center;
+         font-size: 20px;
+         margin: 4px 2px;
+         cursor: pointer;
+         transition: all 0.3s;
+     }
+
+     .confirm {
+        display: flex;
+        justify-content: center;
+        padding: auto;
+        margin-top: 20px;
+    }
+    
+    .confirm button[name="orange"] {
+        width: 200px;
+        background-color: rgb(74, 83, 118);
+        border: 3px solid rgb(74, 83, 118);
+        color: #fff;
+        padding: 3%;
+        text-align: center;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+
+
+    .reserve input[name="start_time"]{
+        font-size: 12spx;
         width: 180px;
         margin: 4px 2px;
         text-align: center;
-        padding: auto;
+        padding: 10px;
         border: solid 3px rgb(74, 83, 118);
         color: rgb(74, 83, 118);
     }
 
-    input[name="end_time"]{
+    .reserve input[name="end_time"]{
+        font-size: 12spx;
         width: 180px;
         margin: 4px 2px;
         text-align: center;
-        padding: auto;
+        padding: 10px;
         border: solid 3px rgb(232, 113, 33);
         color: rgb(232, 113, 33);
     }
+
+
+
+/* INPUT FOR RENT ADMIN */
+
+.form-group select{
+    font-size: 12spx;
+    width: 180px;
+    margin: 4px 2px;
+    text-align: center;
+    padding: 10px;
+    border: solid 3px rgb(74, 83, 118);
+    color: rgb(74, 83, 118);
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-size: 16px;
+}
+
+.form-group label{
+    padding: 5px;
+}
+
+.form-group input{
+    margin: auto;
+}
+
+.rent button[name="confirmRentAdmin"] {
+    width: 200px;
+    background-color: rgb(74, 83, 118);
+    border: 3px solid rgb(74, 83, 118);
+    color: #fff;
+    padding: 3%;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.back{
+    position: absolute;
+}
+
+.back a{
+    bottom: 5px;
+    left: 10px;
+}

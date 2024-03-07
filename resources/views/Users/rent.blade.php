@@ -12,7 +12,7 @@
 
       @if ($errors->any())
         <div class="error-message">
-          <p name="error">{{ $errors->first('error') }}</p>
+          <span>{{ $errors->first('error') }}</span>
         </div>
       @endif
 
@@ -20,7 +20,7 @@
         @csrf
         <input type="hidden" name="slot_id" value="{{ $slot->id}}">
         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-        <button name="details" type="submit">Confirm Rental</button>
+        <button name="details" type="submit">Confirm Rental</button><br>
         <a href="{{ route('slots') }}" style="color: rgb(232, 113, 33)">Back</a>
       </form>
     </div>

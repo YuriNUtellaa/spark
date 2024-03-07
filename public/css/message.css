@@ -1,0 +1,51 @@
+
+
+.success-message {
+    position: absolute;
+    width: 30%;
+    top: 110px;
+    left: 10px;
+
+    text-align: center;
+    background-color: rgb(232, 113, 33);
+    padding: 10px;
+    color: #fff;
+    z-index: 999;
+    background: linear-gradient(to right, rgba(232, 113, 33, 1), rgba(232, 113, 33, 0));
+}
+
+.error-message{
+    width: 300px;
+    background-color: red;
+    color: #fff;
+    font-size: 15px;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+/* USER REGISTER */
+
+    .register-page span{
+        width: 300px;
+        background-color: red;
+        color: #fff;
+        font-size: 12px;
+        margin: 10px;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .login-page .success-message {
+        position: absolute;
+        width: 20%;
+        top: 25px;
+        left: 0px;
+    
+        text-align: center;
+        background-color: rgb(232, 113, 33);
+        padding: 10px;
+        color: #fff;
+        z-index: 2000; /* Ensure it's on top of other content */
+    }
+    

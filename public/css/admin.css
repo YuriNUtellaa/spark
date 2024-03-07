@@ -1,4 +1,11 @@
 /* RENT & RESERVATIONS */
+h3[name="admin"] {
+    text-align: center;
+    background-color: rgb(74, 83, 118);
+    color: #fff;
+    padding: 10px;
+    margin: 5px 0;
+}
 .table-container {
     width: 50%;
     margin: 20px auto;
@@ -13,7 +20,7 @@ table {
 
 th, td {
     border: 1px solid #ddd; /* Light grey border for the cells */
-    text-align: left;
+    text-align: center;
     padding: 8px;
 }
 
@@ -77,7 +84,7 @@ tr:nth-child(even) {
     }
 
     .update-button {
-        background-color: #007bff; /* Blue color for update button */
+        background-color: rgb(232, 113, 33);
         color: white;
         border: none;
         padding: 5px 10px;
@@ -89,7 +96,7 @@ tr:nth-child(even) {
 
 
     .delete-button:hover {
-        background-color: #c82333; /* Darker red on hover */
+        background-color: rgb(232, 113, 33); /* Darker red on hover */
     }
 
     td form {
@@ -221,7 +228,7 @@ tr:nth-child(even) {
 
 /* Update Button */
 .update-button {
-    background-color: #007bff;
+    background-color: rgb(74, 83, 118);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -232,12 +239,12 @@ tr:nth-child(even) {
 }
 
 .update-button:hover {
-    background-color: #0056b3;
+    background-color: rgba(74, 83, 118, 0.664);
 }
 
 /* Delete Button */
 .delete-button {
-    background-color: #dc3545;
+    background-color: rgb(232, 113, 33);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -247,7 +254,7 @@ tr:nth-child(even) {
 }
 
 .delete-button:hover {
-    background-color: #c82333;
+    background-color: rgba(232, 113, 33, 0.61);
 }
 
 /* Responsive Table */
@@ -256,3 +263,14 @@ tr:nth-child(even) {
         overflow-x: auto;
     }
 }
+
+/* RENT INTERFACE */
+
+
+    .form-group{
+
+        justify-content: center;
+        align-items: center;
+    }
+
+    

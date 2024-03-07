@@ -15,9 +15,14 @@ class SlotRental extends Model
         'end_time',
     ];
 
-    // Define the relationship with the User model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // NEW
+    public function slot()
+    {
+        return $this->belongsTo(Slot::class, 'slot_id');
     }
 }

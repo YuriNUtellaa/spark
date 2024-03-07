@@ -1,9 +1,6 @@
 @extends('header')
 @extends('footer')
 
-
-<link rel="stylesheet" href="{{ asset('css/user.css') }}?v={{ time() }}">
-
 <body>
 
     @auth('admin')
@@ -14,7 +11,7 @@
 
             <section class="home-section">
                 <div class="overall-slots">
-                    <h3>Slot Rentals</h3>
+                    <h3 name="admin">SLOT RENTAL RECORD</h3>
                     <table>
                         <thead>
                             <tr>
@@ -55,7 +52,7 @@
                         </tbody>
                     </table>
 
-                    <h3>Reservations</h3>
+                    <h3 name="admin">RESERVATION RECORDS</h3>
                     <table>
                         <thead>
                             <tr>

@@ -76,4 +76,53 @@ class UserController extends Controller
         return redirect('/');
     }
 
+    // PROFILE
+
+    public function showuserprofile()
+    {
+        return view('Users/userprofile');
+    }
+    
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        $validatedData = $request->validate([
+            'username' => 'required|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|nullable|min:6',
+            'plate_number' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Handle the user uploaded image
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->getClientOriginalExtension();
+            $request->image->move(public_path('images'), $imageName); // Moving file to public/images
+            $user->image = $imageName;
+        }
+
+        // update passowrd
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->username = $validatedData['username'];
+        $user->email = $validatedData['email'];
+        $user->plate_number = $validatedData['plate_number'];
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function deactivate()
+    {
+        $user = Auth::user();
+        $user->type = 'irregular';
+        $user->save();
+
+        return back()->with('success', 'Account deactivated successfully.');
+    }
+
 }

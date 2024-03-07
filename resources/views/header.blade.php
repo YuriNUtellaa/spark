@@ -19,6 +19,7 @@
     <link href="{{ asset('css/user.css') }}" rel="stylesheet">
     <link href="{{ asset('css/slot.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/message.css') }}" rel="stylesheet">
 
 </head>
 
@@ -31,12 +32,11 @@
             <li><a href="/slots-control-admin">Slot Control</a></li> |
             <li><a href="/user-management">User Management</a></li> |
             <li><a href="/history-admin">Rent & Reservation</a></li> |
-            <li><a href="/">Summary Report</a></li>
+            <li><a href="/summary">Summary Report</a></li>
         </ul>
         <div class="nav-icon">
             <form action="/logout-admin" method="POST">
                 @csrf
-                <i class='bx bxs-user-circle'></i>
                 <button class="logout-button" type="submit">
                     <i class='bx bx-log-out-circle'></i>
                 </button>
@@ -49,13 +49,21 @@
             <ul class="navmenu">
                 <li><a href="/">Home</a></li>
                 <li><a href="/slots">Slot</a></li>
-                <li><a href="/login-admin">Administration</a></li>
                 <li><a href="/">About Us</a></li>
             </ul>
             <div class="nav-icon">
+                <form action="/userprofile" method="GET">
+                    @csrf
+                <button class="userporfile" type="submit">
+                    <i class='bx bxs-user-circle'></i>
+
+                </button>
+
+                </form>
+
                 <form action="/logout" method="POST">
                     @csrf
-                    <i class='bx bxs-user-circle'></i>
+
                     <button class="logout-button" type="submit">
                         <i class='bx bx-log-out-circle'></i>
                     </button>
@@ -67,7 +75,6 @@
             <ul class="navmenu">
                 <li><a href="/">Home</a></li>
                 <li><a href="/slots">Slot</a></li>
-                <li><a href="/login-admin">Administration</a></li>
                 <li><a href="/">About Us</a></li>
             </ul>
             <div class="nav-icon">
@@ -77,5 +84,4 @@
         @endauth
     @endauth
 </header>
-
 

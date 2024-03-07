@@ -19,7 +19,7 @@ class Slot extends Model
     {
         return $this->hasMany(Reservation::class);
     }
-    
+
     public function currentRental()
     {
         return $this->rentals()->whereNull('end_time')->first();
@@ -42,7 +42,7 @@ class Slot extends Model
      *
      * @var array
      */
-    protected $fillable = ['slot_number', 'status', 'start_time']; // Add start_time to fillable fields
+    protected $fillable = ['slot_number', 'status', 'start_time'];
 
     public function renter()
     {
