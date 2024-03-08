@@ -12,7 +12,11 @@ class UserController extends Controller
     {
         return view('Users/register');
     }
-
+    
+    public function showaboutus()
+    {
+        return view('aboutus');
+    }
     public function showLoginPage()
     {
         return view('Users/login');
@@ -97,9 +101,9 @@ class UserController extends Controller
 
         // Handle the user uploaded image
         if ($request->hasFile('image')) {
-            $imageName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('images'), $imageName); // Moving file to public/images
-            $user->image = $imageName;
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName(); // Use the original file name
+            $image->move(public_path('profiles'), $imageName);
         }
 
         // update passowrd

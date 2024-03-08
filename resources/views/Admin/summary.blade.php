@@ -12,6 +12,9 @@
 <body>
 
     <div class="container mt-5">
+        
+        <div class="overall-slots">
+            
         <h1 class="text-center mb-4">Summary Report</h1>
 
         <section>
@@ -35,12 +38,18 @@
                             <td>{{ $rental->slot_id ?? 'Slot not found' }}</td>
                             <td>{{ optional($rental->user)->username ?? 'User not found' }}</td>
                             <td>{{ $rental->total_hours }}</td>
-                            <td>₱{{ $rental->per_hour_rate }}</td>
-                            <td>₱{{ number_format($rental->total, 2) }}</td>
+                            <td>₱ {{ $rental->per_hour_rate }}</td>
+                            <td>₱ {{ number_format($rental->total, 2) }}</td>
                         </tr>
                         @empty
                         <tr><td colspan="6" class="text-center">No rental records found.</td></tr>
                         @endforelse
+
+                        <tr>
+                            <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
+                            <td><strong>₱ {{ number_format($grandTotalRental, 2) }}</strong></td>
+                        </tr>
+
                     </tbody>
 
             </table>
@@ -66,15 +75,15 @@
                         <td>{{ $reservation->slot_id ?? 'Slot not found' }}</td>
                         <td>{{ optional($reservation->user)->username ?? 'User not found' }}</td>
                         <td>{{ $reservation->total_hours }}</td>
-                        <td>₱{{ $reservation->per_hour_rate }}</td>
-                        <td>₱{{ number_format($reservation->total, 2) }}</td>
+                        <td>₱ {{ $reservation->per_hour_rate }}</td>
+                        <td>₱ {{ number_format($reservation->total, 2) }}</td>
                     </tr>
                     @empty
                     <tr><td colspan="6" class="text-center">No reservation records found.</td></tr>
                     @endforelse
                     <tr>
                         <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
-                        <td><strong>₱{{ number_format($grandTotalReservation, 2) }}</strong></td>
+                        <td><strong>₱ {{ number_format($grandTotalReservation, 2) }}</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -97,14 +106,14 @@
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->username }}</td>
                         <!-- Removed Slot ID from here -->
-                        <td>₱{{ number_format($user->monthly_payment, 2) }}</td>
+                        <td>₱ {{ number_format($user->monthly_payment, 2) }}</td>
                     </tr>
                     @empty
                     <tr><td colspan="3" class="text-center">No regular user records found.</td></tr>
                     @endforelse
                     <tr>
                         <td colspan="2" class="text-right"><strong>Grand Total:</strong></td>
-                        <td><strong>₱{{ number_format($grandTotalRegular, 2) }}</strong></td>
+                        <td><strong>₱ {{ number_format($grandTotalRegular, 2) }}</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -114,9 +123,9 @@
                 </a>
             </div>
         </section>
-
-
     </div>
+
+</div>
 
 </body>
 </html>

@@ -49,7 +49,7 @@
             <ul class="navmenu">
                 <li><a href="/">Home</a></li>
                 <li><a href="/slots">Slot</a></li>
-                <li><a href="/">About Us</a></li>
+                <li><a href="/about-us">About Us</a></li>
             </ul>
             <div class="nav-icon">
                 <form action="/userprofile" method="GET">
@@ -75,7 +75,7 @@
             <ul class="navmenu">
                 <li><a href="/">Home</a></li>
                 <li><a href="/slots">Slot</a></li>
-                <li><a href="/">About Us</a></li>
+                <li><a href="/about-us">About Us</a></li>
             </ul>
             <div class="nav-icon">
                 <a href="register"><i class='bx bx-user-plus'></i></a>

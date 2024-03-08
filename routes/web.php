@@ -11,6 +11,7 @@ use App\Http\Controllers\SlotsController;
     Route::get('/', [SlotsController::class, 'index'])->name('/');
     Route::get('/home', [SlotsController::class, 'index'])->name('home');
     Route::get('/slots', [SlotsController::class, 'slot'])->name('slots');
+    Route::get('/about-us',[UserController::class, 'showaboutus']);
 
 // FOR ADMIN INTERFACE ////////////////////////////////////
 

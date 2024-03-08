@@ -21,10 +21,15 @@
         <input type="hidden" name="slot_id" value="{{ $slot->id }}">
         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
 
-        <label for="start_time">Start Time:</label>
-        <input type="datetime-local" id="start_time" name="start_time" required>
-        <label for="end_time">End Time:</label>
-        <input type="datetime-local" id="end_time" name="end_time" required>
+        <div class="form-group">
+            <label for="start_time">Start Time:</label>
+            <input type="datetime-local" id="start_time" name="start_time" required>
+        </div>
+          
+        <div class="form-group">
+            <label for="end_time">End Time:</label>
+            <input type="datetime-local" id="end_time" name="end_time" required>
+        </div>
         
         <div class="confirm">
           <button type="submit" name="orange">Confirm Reservation</button>

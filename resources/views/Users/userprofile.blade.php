@@ -26,7 +26,7 @@
 <!-- Display current profile image if exists -->
 @if(auth()->user()->image)
     <div class="current-profile-image">
-        <img src="{{ asset('images/'.auth()->user()->image) }}" alt="Profile Image">
+        <img src="{{ asset('profiles/'.auth()->user()->image) }}" alt="Profile Image">
     </div>
 @endif
 
