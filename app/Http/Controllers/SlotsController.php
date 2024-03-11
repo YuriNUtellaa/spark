@@ -34,35 +34,37 @@ class SlotsController extends Controller
 
 // USER SIDE //////////////////////////////////////////////////////////////////
 
-    public function confirmRent(Request $request)
-    {
-        // Check if the user already has an active rental
-        $alreadyRented = SlotRental::where('user_id', auth()->id())
-            ->whereNull('end_time')
-            ->exists();
-    
-        if ($alreadyRented) {
-            return redirect()->back()->withErrors(['error' => 'You already have an active rental.']);
-        }
-    
-        // Proceed with renting the slot
-        $slot = Slot::findOrFail($request->slot_id);
-    
-        // Update slot details
-        $slot->status = 'occupied';
-        $slot->updated_at = now();
-        $slot->save();
-    
-        // Create a new SlotRental record
-        $slotRental = new SlotRental();
-        $slotRental->slot_id = $slot->id;
-        $slotRental->user_id = auth()->id();
-        $slotRental->start_time = now();
-        $slotRental->save();
-    
-        // Redirect to the slots page after successful rental
-        return redirect()->route('slots')->with('success', 'Slot rented successfully.');
+public function confirmRent(Request $request)
+{
+    // Check if the user already has an active rental
+    $alreadyRented = SlotRental::where('user_id', auth()->id())
+        ->whereNull('end_time')
+        ->exists();
+
+    if ($alreadyRented) {
+        return redirect()->back()->withErrors(['error' => 'You already have an active rental.']);
     }
+
+    // Proceed with renting the slot
+    $slot = Slot::findOrFail($request->slot_id);
+
+    // Update slot details
+    $slot->status = 'pending'; // Set status to pending
+    $slot->updated_at = now();
+    $slot->save();
+
+    // Create a new notification for the user
+    $notification = new UserMail();
+    $notification->user_id = auth()->id();
+    $notification->type = 'Slot';
+    $notification->title = 'Slot Rental Request Sent';
+    $notification->content = 'Your request to rent slot number ' . $slot->slot_number . ' has been sent. Please wait for approval.';
+    $notification->save();
+
+    // Redirect to the slots page after successful rental request
+    return redirect()->route('slots')->with('success', 'Slot rental request sent. Please wait for approval.');
+}
+
     
     public function endRent(Request $request, $slotId)
     {

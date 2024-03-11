@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('username')->nullable();
             $table->string('password')->nullable();
             $table->string('email')->nullable();
+            $table->enum('status', ['pending', 'verified'])->default('pending');
             $table->string('plate_number');
             $table->string('image')->nullable();
             $table->enum('type', ['regular', 'irregular']);

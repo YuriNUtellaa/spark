@@ -1,5 +1,4 @@
 @extends('header')
-@extends('footer')
 
 <body>
 
@@ -9,7 +8,7 @@
                 ADMIN HISTORY
             </div>
 
-            <section class="home-section">
+            <section class="home-section" style="margin-top: 0">
                 <div class="overall-slots">
                     <h3 name="admin">SLOT RENTAL RECORD</h3>
                     <table>

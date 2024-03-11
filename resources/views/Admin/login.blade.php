@@ -1,5 +1,5 @@
 @extends('header')
-@extends('footer')
+
 
 <body>
     <section class="user-login-page">

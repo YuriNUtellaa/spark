@@ -1,0 +1,114 @@
+
+
+/* NOTIFICATION */
+
+
+.section-notification {
+    height: 98vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eee;
+}
+
+.notifications{
+    position: relative;
+    padding: 20px;
+    width: 700px;
+    min-height: 500px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.notifications h2{
+    width: 100%;
+    background-color: rgb(74, 83, 118);
+    padding: 10px;
+    border-radius: 3px;
+    color: #fff;
+
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+.item{
+    padding: 5px;
+    width: 100%;
+    border: 3px solid rgb(74, 83, 118);
+    border-radius: 10px;
+    transition: all 0.5s ease;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.item i{
+    padding-left: 20px;
+    font-size: 30px;
+}
+
+.item p{
+    text-align: right;
+    padding-right: 20px;
+}
+
+.item:hover {
+    scale: 0.98;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+
+/* ACCOUNT */
+
+.section-message-account {
+    height: 98vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eee;
+}
+
+.message-account {
+    position: relative;
+    padding: 20px;
+    width: 500px;
+    min-height: 500px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.message-account .header{
+    width: 100%;
+    background-color: rgb(74, 83, 118);
+    padding: 10px;
+    border-radius: 3px;
+    color: #fff;
+
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.message-account .dear{
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.message-account .body{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.message-account .footer {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    text-align: right;
+}

@@ -6,12 +6,35 @@
     top: 110px;
     left: 10px;
 
-    text-align: center;
+    text-align: left;
     background-color: rgb(232, 113, 33);
     padding: 10px;
     color: #fff;
     z-index: 999;
     background: linear-gradient(to right, rgba(232, 113, 33, 1), rgba(232, 113, 33, 0));
+
+    animation: fadeOut 5s ease-in-out forwards;
+}
+
+.success-message-admin {
+    position: absolute;
+    width: 30%;
+    top: 60px;
+    left: 100px;
+
+    text-align: left;
+    background-color: rgb(232, 113, 33);
+    padding: 10px;
+    color: #fff;
+    z-index: 999;
+    background: linear-gradient(to right, rgba(232, 113, 33, 1), rgba(232, 113, 33, 0));
+
+    animation: fadeOut 5s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .error-message{
@@ -46,6 +69,6 @@
         background: linear-gradient(to right, rgba(232, 113, 33, 1), rgba(232, 113, 33, 0));
         padding: 10px;
         color: #fff;
-        z-index: 999; /* Ensure it's on top of other content */
+        z-index: 999;
     }
     

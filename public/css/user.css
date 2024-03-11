@@ -176,7 +176,7 @@
        display: flex;
        justify-content: center;
        align-items: center;
-       height: 90vh;
+       height: 98vh;
        background-color: #eee;
     }
 
@@ -200,6 +200,13 @@
 
     .rent p{
         padding-bottom: 20px;
+    }
+    
+    .rent .note{
+        background-color: rgb(74, 83, 118);
+        color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
     }
 
     .rent label{

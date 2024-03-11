@@ -1,5 +1,5 @@
 @extends('header')
-@extends('footer')
+
 
 <body>
 

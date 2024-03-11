@@ -14,13 +14,13 @@
             background: #f8f9fa;
         }
 
-        header{
+        .header{
             height: 120px;
             text-align: right;
             font-size: 12px;
         }
 
-        header h1{
+        .header h1{
             font-size: 60px;
             color: rgb(232, 113, 33);
             margin-top: 0px;
@@ -107,143 +107,107 @@
 </head>
 <body>
 
-    <header style="padding: 20px">
-        <div class="image">
-            {{-- <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('layouts/SPark-logos_transparent.png'))) }}" alt="SPark"> --}}
-            <h1>SPark</h1>
-            <p style="text-align: left; margin: 0px;">
-                <em>spark@gmail.com</em> <br>
-                <em>spark@facebook.com.ph</em> <br>
-                <em>8700-911-5522 </em> <br>
-                <em>SPark Parking System | 2024 © Copyright</em>
-            </p>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <img src="{{ public_path('logo/SPark-logos_transparent.png') }}" alt="SPark Logo" style="height: 200px;">
+                <p>spark@gmail.com<br>
+                    spark@facebook.com.ph<br>
+                    8700-911-5522<br>
+                    SPark Parking System | 2024 © Copyright</p>
+            </div>
+            <div class="header-right">
+                <strong>Prepared By:</strong>
+                <p>Co, Andrei<br>
+                    Baligmasay, Ernesto<br>
+                    Dacumos, Miguel Angelo<br>
+                    Gamo, Marvin</p>
+            </div>
         </div>
-        <p name="top" style="margin-bottom: 10px"><strong>Prepaird By:</strong></p>
-        <p>Co, Andrei <br>
-           Baligmasay, Ernesto <br>
-           Dacumos, Miguel Angelo <br>
-           Gamo, Marvin
-        </p>
-    </header>
-    
+    </div>
+
+
+
+
 
     <div class="container">
-        <hr style="border: solid rgb(232, 113, 33) 4px; margin: 0px;">
-        <h1 class="text-center mb-4">Montly Summary Report</h1>
+        <div class="title">
+            <h1>Monthly Summary Report for {{ $reportMonth }}</h1>
+        </div>
 
-        <!-- Rental Record Section -->
-        <section>
-            <h2>RENTAL RECORD</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Rental ID</th>
-                        <th>Slot ID</th>
-                        <th>User Name</th>
-                        <th>Total Hours</th>
-                        <th>Rate per Hour</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($rentals as $rental)
+        <h2 style="background-color: #4a5376; color: white; padding: 8px; margin-top: 20px; font-size: 16px;">Rental
+            Record For Irregular User</h2>
+        <table class="table">
+            <tr>
+                <th>Rental ID</th>
+                <th>Slot Number</th>
+                <th>User Name</th>
+                <th>Hours</th>
+                <th>Minutes</th>
+                <th>Minimum Rate</th>
+                <th>Additional Rate</th>
+                <th class="currency">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach ($rentals as $rental)
                     <tr>
                         <td>{{ $rental->id }}</td>
-                        <td>{{ $rental->slot_id ?? 'Slot not found' }}</td>
-                        <td>{{ optional($rental->user)->username ?? 'User not found' }}</td>
-                        <td>{{ $rental->total_hours }}</td>
-                        <td><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ $rental->per_hour_rate }}</td>
-                        <td><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($rental->total, 2) }}</td>
+                        <td>{{ $rental->slot_number }}</td>
+                        <td>{{ $rental->user->username }}</td>
+                        <td>{{ $rental->hours }}</td>
+                        <td>{{ $rental->minutes }}</td>
+                        <td> <span class = "currency">₱{{ number_format($ratePerHour, 2) }}</span></td>
+                        <td> <span class="currency">₱{{ number_format($rental->additional_rate, 2) }}</span>
+                        </td>
+                        <<td class="currency">₱{{ number_format($rental->total, 2) }}</td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center">No rental records found.</td>
-                    </tr>
-                    @endforelse
-                    <tr>
-                        <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
-                        <td><strong><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($grandTotalRental, 2) }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
+                @endforeach
+                <tr>
+                    <td colspan="7" class="text-right"><strong>Grand Total:</strong></td>
+                    <td>₱ {{ number_format($grandTotalRental, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
         </section>
+    </div>
 
-        <!-- Reservation Record Section -->
+
+    <div class="table-container">
         <section>
-            <h2>RESERVATION RECORD</h2>
+            <h2 style="background-color: #4a5376; color: white; padding: 8px; margin-top: 20px; font-size: 16px;">
+                Monthly Subscription of Regular Users</h2>
             <table class="table">
-                <thead>
-                    <tr>
-                        <th>Reservation ID</th>
-                        <th>Slot ID</th>
-                        <th>User Name</th>
-                        <th>Total Hours</th>
-                        <th>Rate per Hour</th>
-                        <th>Total</th>
-                    </tr>
+                <tr>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Monthly Payment</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @forelse($reservations as $reservation)
-                    <tr>
-                        <td>{{ $reservation->id }}</td>
-                        <td>{{ $reservation->slot_id ?? 'Slot not found' }}</td>
-                        <td>{{ optional($reservation->user)->username ?? 'User not found' }}</td>
-                        <td>{{ $reservation->total_hours }}</td>
-                        <td><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ $reservation->per_hour_rate }}</td>
-                        <td><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($reservation->total, 2) }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center">No reservation records found.</td>
-                    </tr>
-                    @endforelse
-                    <tr>
-                        <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
-                        <td><strong><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($grandTotalReservation, 2) }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Monthly Subscription Section -->
-        <section>
-            <h2>MOTHLY SUBSCRIPTION</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>User Name</th>
-                        <th>Monthly Payment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($regularUsers as $user)
-                    <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->username }}</td>
-                        <td><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($user->monthly_payment, 2) }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="3" class="text-center">No regular user records found.</td>
-                    </tr>
-                    @endforelse
+                    @foreach ($regularUsers as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->username }}</td>
+                            <td>₱ {{ number_format($user->monthly_payment, 2) }}</td>
+                        </tr>
+                    @endforeach
                     <tr>
                         <td colspan="2" class="text-right"><strong>Grand Total:</strong></td>
-                        <td><strong><em style="font-family: 'DejaVu Sans', sans-serif; margin: 0px;">₱ </em>{{ number_format($grandTotalRegular, 2) }}</strong></td>
+                        <td>₱ {{ number_format($grandTotalRegular, 2) }}</td>
                     </tr>
                 </tbody>
             </table>
         </section>
+    </div>
+    <div class="footer">
+        SPark Parking System | 2024 © Copyright
+    </div>
 
-        <footer>
-            <hr style="border: solid rgb(232, 113, 33) 4px; margin: 0px;">
-            <p style="text-align: center">SPark Parking System | 2024 © Copyright</p>
-        </footer>
-        
 
 
     </div>
 
-    </body>
-    </html>
+</body>
+
+</html>

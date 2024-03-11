@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf as PDF;
-
 use App\Models\Slot;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\SlotRental;
+use App\Models\UserMail;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class AdminController extends Controller
 {
@@ -72,6 +74,45 @@ class AdminController extends Controller
             return back()->withErrors(['error' => 'Failed to register admin. Please try again.']);
         }
     }
+
+
+    // SLOT FUNCTIONALITIES
+
+        // APPROVE
+
+            public function approveRent(Request $request, $slotId)
+            {
+                // Find the slot
+                $slot = Slot::findOrFail($slotId);
+                
+                // Update slot status to 'occupied'
+                $slot->status = 'occupied';
+                $slot->save();
+                
+                // Find the corresponding slot rental record
+                $slotRental = SlotRental::where('slot_id', $slotId)
+                    ->whereNull('end_time')
+                    ->first();
+
+                // Update slot rental status to 'approved'
+                $slotRental->status = 'approved';
+                $slotRental->save();
+
+                // Create a new notification for the user
+                // Replace 'user_id' with the actual user ID
+                $notification = new Notification();
+                $notification->user_id = $slotRental->user_id;
+                $notification->type = 'Slot';
+                $notification->title = 'Your rental request has been approved';
+                $notification->content = "Your rental request for slot ' . $slot->slot_number . ' has been approved. 
+                We're excited to inform you that your rental request has been successfully approved! This means that you can now proceed with confidence, knowing that your desired rental arrangement has been confirmed.
+                Our team has carefully reviewed your request and found everything to be in order. We understand the importance of timely approvals, and we're delighted to have the opportunity to assist you in securing your rental.
+                With your request approved, you can now plan and prepare for your upcoming rental experience with ease. Whether it's a residential property, a commercial space, or any other type of rental, we're committed to ensuring that your experience is smooth and hassle-free.";
+                $notification->save();
+
+                // Redirect back with a success message
+                return redirect()->back()->with('success', 'Rental request approved successfully.');
+            }
 
     // RENT & RESERVATION HISTORY
 
@@ -150,6 +191,7 @@ class AdminController extends Controller
             'password' => 'sometimes|nullable|min:6',
             'plate_number' => 'required|string|max:255',
             'type' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
@@ -161,6 +203,7 @@ class AdminController extends Controller
         }
         $user->plate_number = $validatedData['plate_number'];
         $user->type = $validatedData['type'];
+        $user->status = $validatedData['status'];
     
         if ($request->hasFile('image')) {
             $imageName = $user->id . '_' . time() . '.' . $request->image->extension();
@@ -170,8 +213,22 @@ class AdminController extends Controller
     
         $user->save();
     
+        // Create a record in user_mail if the user account has been verified
+        if ($validatedData['status'] === 'verified') {
+            UserMail::create([
+                'user_id' => $user->id,
+                'type' => 'Account',
+                'title' => 'Account Verification',
+                'content' => "We're pleased to inform you that your account has successfully completed the verification process. This means you now have full access to all the features and functionalities within our system.
+                Verification is an important step in ensuring the security and integrity of our platform. By confirming your identity, we can better protect your account from unauthorized access and provide you with a seamless experience.
+                Should you have any questions or require assistance with navigating our system, our support team is always available to help. Feel free to reach out to us at any time, and we'll be happy to assist you.
+                Thank you for choosing SPark Management System. We look forward to serving you and helping you achieve your goals.",
+            ]);
+        }
+    
         return redirect()->route('admin.user-management')->with('success', 'User updated successfully.');
     }
+    
     
     public function deleteUser(User $user)
         {
@@ -180,94 +237,158 @@ class AdminController extends Controller
         }
     
 
-    // SUMMARY
+    // SUMMARY REPORT ///////////////////////////////////////////////
 
     public function showSummary() {
         $ratePerHour = 50;
+        $additionalRatePerMinute = 1;
         $fixedMonthlyPayment = 4500;
-    
-        $rentals = SlotRental::with(['user', 'slot'])
-                        ->selectRaw('slot_rentals.id, slot_rentals.slot_id, user_id, SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
-                        ->groupBy('slot_rentals.id', 'slot_rentals.slot_id', 'user_id')
-                        ->get()
-                        ->each(function ($rental) use ($ratePerHour) {
-                            $rental->per_hour_rate = $ratePerHour;
-                            $rental->total = $rental->total_hours * $ratePerHour;
-                        });
-    
-        $reservations = Reservation::with(['user', 'slot'])
-                        ->selectRaw('reservations.id, reservations.slot_id, user_id, SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
-                        ->groupBy('reservations.id', 'reservations.slot_id', 'user_id')
-                        ->get()
-                        ->each(function ($reservation) use ($ratePerHour) {
-                            $reservation->per_hour_rate = $ratePerHour;
-                            $reservation->total = $reservation->total_hours * $ratePerHour;
-                        });
-    
+
+        // Rentals
+        $rentals = SlotRental::with('user')
+        ->join('slots', 'slot_rentals.slot_id', '=', 'slots.id')
+        ->selectRaw('
+            slot_rentals.id,
+            slots.slot_number AS slot_number,
+            user_id,
+            SUM(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS total_minutes
+        ')
+        ->groupBy('slot_rentals.id', 'slots.slot_number', 'user_id')
+        ->get()
+        ->map(function ($rental) use ($ratePerHour, $additionalRatePerMinute) {
+            if ($rental->user && $rental->user->type === 'irregular') {
+                $totalMinutes = $rental->total_minutes;
+                $rental->hours = intdiv($totalMinutes, 60);
+                $rental->minutes = $totalMinutes % 60;
+                $additionalMinutes = max($totalMinutes - 60, 0);
+                $rental->additional_rate = $additionalMinutes * $additionalRatePerMinute;
+                $rental->total = $ratePerHour * ($rental->hours ?: 1) + $rental->additional_rate; // dapat sure na  at least one hour is charged
+                return $rental; // Balik sa  modified rental
+            }
+            return null; // This rental will be excluded because the user does not exist or is not irregular
+        })
+        ->filter();
+
+
+        // Calculate grand totals
         $grandTotalRental = $rentals->sum('total');
-        $grandTotalReservation = $reservations->sum('total');
-    
+
+
+        // Regular users monthly payment
         $regularUsers = User::where('type', 'regular')
-                        ->with('slot') 
-                        ->get()
-                        ->each(function ($user) use ($fixedMonthlyPayment) {
-                            $user->monthly_payment = $fixedMonthlyPayment;
-                            $user->slot_id = $user->slot ? $user->slot->id : 'No slot'; 
-                        });
-    
+                    ->get()
+                    ->map(function ($user) use ($fixedMonthlyPayment) {
+                        $user->monthly_payment = $fixedMonthlyPayment;
+                        return $user;
+                    });
         $grandTotalRegular = $regularUsers->sum('monthly_payment');
-    
+
+        // Return the view with all the necessary variables
         return view('Admin.summary', [
             'rentals' => $rentals,
-            'reservations' => $reservations,
+
             'regularUsers' => $regularUsers,
             'grandTotalRental' => $grandTotalRental,
-            'grandTotalReservation' => $grandTotalReservation,
-            'grandTotalRegular' => $grandTotalRegular
+
+            'grandTotalRegular' => $grandTotalRegular,
+            'ratePerHour' => $ratePerHour,
+            'additionalRatePerMinute' => $additionalRatePerMinute
         ]);
     }
+    
+    public function generateSummaryReportPDF(Request $request){
 
-    
-    public function generateSummaryReportPDF() {
-        // Prepare the data para sa pdf
-        $rentals = SlotRental::with(['user', 'slot'])
-                        ->selectRaw('slot_rentals.id, slot_rentals.slot_id, user_id,
-                                    SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
-                        ->groupBy('slot_rentals.id', 'slot_rentals.slot_id', 'user_id')
-                        ->get()
-                        ->each(function ($rental) {
-                            $rental->per_hour_rate = 50; // 50 pesos per hour
-                            $rental->total = $rental->total_hours * $rental->per_hour_rate;
-                        });
-    
-        $reservations = Reservation::with(['user', 'slot'])
-                        ->selectRaw('reservations.id, reservations.slot_id, user_id,
-                                    SUM(TIMESTAMPDIFF(HOUR, start_time, end_time)) as total_hours')
-                        ->groupBy('reservations.id', 'reservations.slot_id', 'user_id')
-                        ->get()
-                        ->each(function ($reservation) {
-                            $reservation->per_hour_rate = 50; // 50 pesos per hour
-                            $reservation->total = $reservation->total_hours * $reservation->per_hour_rate;
-                        });
-    
+        $ratePerHour = 50; // Base rate for up to one hour
+        $additionalRatePerMinute = 1; // Additional rate per minute after the first hour
+        $fixedMonthlyPayment = 4500; // Fixed monthly payment for regular users
+
+        $reportMonth = $request->input('reportMonth', date('Y-m'));
+        $year = Carbon::parse($reportMonth)->year;
+        $month = Carbon::parse($reportMonth)->month;
+
+        // Define the formattedMonth here
+        $formattedMonth = Carbon::parse($reportMonth)->format('F Y');
+
+            // Rentals
+            $rentals = SlotRental::with('user')
+            ->join('slots', 'slot_rentals.slot_id', '=', 'slots.id')
+            ->whereYear('start_time', $year)
+            ->whereMonth('start_time', $month)
+            ->selectRaw('
+                slot_rentals.id,
+                slots.slot_number AS slot_number,
+                user_id,
+                SUM(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS total_minutes
+            ')
+            ->groupBy('slot_rentals.id', 'slots.slot_number', 'user_id')
+            ->get()
+
+            ->map(function ($rental) use ($ratePerHour, $additionalRatePerMinute) {
+                if ($rental->user && $rental->user->type === 'irregular') {
+                    $totalMinutes = $rental->total_minutes;
+                    $rental->hours = intdiv($totalMinutes, 60);
+                    $rental->minutes = $totalMinutes % 60;
+                    $additionalMinutes = max($totalMinutes - 60, 0);
+                    $rental->additional_rate = $additionalMinutes * $additionalRatePerMinute;
+                    $rental->total = $ratePerHour * ($rental->hours ?: 1) + $rental->additional_rate; // dapat at least one hour is charged
+                    return $rental; // balik modified rental
+                }
+                return null; // This rental will be excluded because the user does not exist or is not irregular
+            })
+            ->filter();
+
+
+        // Calculate grand totals
+        $grandTotalRental = $rentals->sum('total');
+
+
+        // Regular users monthly payment
         $regularUsers = User::where('type', 'regular')
-                        ->get()
-                        ->each(function ($user) {
-                            $user->monthly_payment = 4500; // Fixed monthly payment for regular users
-                        });
-    
+        ->get()
+        ->map(function ($user) use ($fixedMonthlyPayment) {
+            $user->monthly_payment = $fixedMonthlyPayment;
+            return $user;
+        });
+
         $data = [
             'rentals' => $rentals,
-            'reservations' => $reservations,
+
             'regularUsers' => $regularUsers,
             'grandTotalRental' => $rentals->sum('total'),
-            'grandTotalReservation' => $reservations->sum('total'),
-            'grandTotalRegular' => $regularUsers->sum('monthly_payment')
+            'reportMonth' => $formattedMonth,
+            'grandTotalRegular' => $regularUsers->sum('monthly_payment'),
+            'ratePerHour' => $ratePerHour
+
         ];
-    
-        //return view('pdf.summary', $data); // VIEW
-        $pdf = PDF::loadView('pdf.summary', $data); // LOAD
-        return $pdf->download('summary-report.pdf'); // DOWNLOAD
+
+        // return view('pdf.summary', $data); // VIEW
+        $pdf = PDF::loadView('pdf.summary', $data);
+        return $pdf->download('summary-report-' . $reportMonth . '.pdf');
+    }
+
+
+    // USER REPORT ///////////////////////////////////////////////
+
+    public function generateUserManagementReportPDF(Request $request){
+        $reportMonth = $request->input('reportMonth', date('Y-m'));
+        $year = Carbon::createFromFormat('Y-m', $reportMonth)->year;
+        $month = Carbon::createFromFormat('Y-m', $reportMonth)->month;
+
+        // Fetch users created in the selected month and year
+        $users = User::whereYear('created_at', $year)
+                        ->whereMonth('created_at', $month)
+                        ->get();
+
+        $formattedMonth = Carbon::createFromFormat('Y-m', $reportMonth)->format('F Y'); // Convert to a readable format
+        //yung carbon d ko sure kung ano yan hahaha kita ko lang yan sa lara cast
+        $data = [
+            'users' => $users,
+            'reportMonth' => $formattedMonth
+        ];
+
+
+        $pdf = PDF::loadView('pdf.usermanage', $data);
+        return $pdf->download('user-management-report-' . $reportMonth . '.pdf');
     }
     
 }

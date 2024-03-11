@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Slot::class);
     }
+
+    public function userMails()
+    {
+        return $this->hasMany(UserMail::class);
+    }
 }

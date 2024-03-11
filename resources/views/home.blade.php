@@ -1,9 +1,10 @@
 @extends('header')
-@extends('footer')
 
 <body>
+
   
   @auth ('admin')
+
 
     <section class="main-home">
       <div class="main-text">
@@ -18,7 +19,15 @@
 
   @else
 
+
       @auth
+
+        @if(session('success'))
+          <div class="success-message">
+              {{ session('success') }}
+          </div>
+        @endif
+  
 
         <section class="main-home">
           <div class="main-text">
@@ -31,7 +40,15 @@
           </div>
         </section>
 
+
       @else
+
+        @if(session('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
 
         <section class="main-home">
           <div class="main-text">

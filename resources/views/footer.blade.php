@@ -2,7 +2,7 @@
     <section class="contact">
       <div class="contact-info">
           <div class="first-info">
-              <img src="layouts/SPark-logos_white.png" alt="">
+              <img src="/layouts/SPark-logos_white.png" alt="">
 
               <p>#0144 P. Rosales St. Sta Ana Kaliwa <br> PATEROS, METRO MANILA</p>
               <p>0922 4567 9123</p>

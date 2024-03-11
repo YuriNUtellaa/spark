@@ -1,11 +1,10 @@
 @extends('header')
-@extends('footer')
 
 <body>
 
     @auth('admin')
 
-    <section class="home-section">
+    <section class="home-section" style="margin-top: 0">
         <div class="overall-slots">
             <h2 name="heading">ADMIN SLOT CONTROL</h2>
             <div class="slots">
@@ -44,10 +43,20 @@
                             @method('PUT')
                             <button type="submit" name="cancel">End Renting</button>
                         </form>
-                    @elseif($slot->status === 'reserved')
-                        <button name="details" disabled>Details</button>
-                        <button name="cancel" disabled>Cancel Reservation</button>
+
+                    @elseif($slot->status === 'pending')
+                        <form action="{{ route('approve-rent', ['slot' => $slot->id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" name="approve">Approve</button>
+                        </form>
+                        <form action="{{ route('/', ['slot' => $slot->id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" name="deny">Deny</button>
+                        </form>
                     @endif
+
                 </div>
                 @endforeach
             </div>

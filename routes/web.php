@@ -4,14 +4,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SlotsController;
+use App\Http\Controllers\NotificationController;
+
 
 
 // FOR WEBSITE INTERFACE ////////////////////////////////////
+
+    Route::get('/dashboard', function () {return view('dashboard');});
 
     Route::get('/', [SlotsController::class, 'index'])->name('/');
     Route::get('/home', [SlotsController::class, 'index'])->name('home');
     Route::get('/slots', [SlotsController::class, 'slot'])->name('slots');
     Route::get('/about-us',[UserController::class, 'showaboutus']);
+
 
 // FOR ADMIN INTERFACE ////////////////////////////////////
 
@@ -55,6 +60,10 @@ use App\Http\Controllers\SlotsController;
             Route::delete('/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('delete-reservation');
         });
 
+        // APPROVE
+            Route::put('/approve-rent/{slot}', [SlotsController::class, 'approveRent'])->name('approve-rent');
+
+
     // USERMANAGEMENT
 
         Route::put('/user-management/{user}', [AdminController::class, 'updateUser'])->name('admin.update-user');
@@ -63,6 +72,19 @@ use App\Http\Controllers\SlotsController;
         Route::middleware(['auth:admin'])->group(function () {
             Route::get('/user-management', [AdminController::class, 'showUserManagement'])->name('admin.user-management');
         });
+
+    // SUMMARY REPORT
+
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/summary', [AdminController::class, 'showSummary']);
+        Route::get('/admin/generate-summary-report', [AdminController::class, 'generateSummaryReportPDF'])
+            ->name('admin.generate-summary-report');
+        });
+
+    // USER REPORT
+
+        Route::get('/admin/generate-user-management-report', [AdminController::class, 'generateUserManagementReportPDF'])
+        ->name('admin.generate-user-management-report');
 
 
 
@@ -89,17 +111,16 @@ use App\Http\Controllers\SlotsController;
         Route::post('/confirm-reserve', [SlotsController::class, 'confirmReserve'])->name('confirm-reserve');
 
 
-    // SUMMARY
-
-        Route::middleware(['auth:admin'])->group(function () {
-        Route::get('/summary', [AdminController::class, 'showSummary']);
-        Route::get('/admin/generate-summary-report', [AdminController::class, 'generateSummaryReportPDF'])
-            ->name('admin.generate-summary-report');
-    });
-
     // PROFILE
 
         Route::get('/userprofile', [UserController::class, 'showuserprofile']);
         Route::get('/userprofile', [UserController::class, 'showuserprofile'])->name('userprofile');
         Route::put('/userprofile', [UserController::class, 'update'])->name('user.update');
         Route::put('/userprofile/deactivate', [UserController::class, 'deactivate'])->name('user.deactivate');
+
+    // NOTIFICATION
+
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::get('/messageAccount/{id}', [NotificationController::class, 'showAccountMessage'])->name('messageAccount');
+
+

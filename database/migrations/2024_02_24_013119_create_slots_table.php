@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('slots', function (Blueprint $table) {
             $table->id();
             $table->string('slot_number');
-            $table->enum('status', ['available', 'reserved', 'occupied'])->default('available');
+            $table->enum('status', ['available', 'pending', 'occupied'])->default('available');
             $table->timestamps();
         });
     }

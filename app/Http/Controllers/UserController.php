@@ -65,7 +65,7 @@ class UserController extends Controller
         // Attempt to authenticate the user
         if (Auth::attempt($credentials)) {
             // Authentication successful
-            return redirect()->intended('/home'); // Redirect to the intended URL or a default path
+            return redirect()->intended('/home')->with('success', 'Login successful!'); // Redirect to the intended URL or a default path
         }
 
         // Authentication failed
@@ -77,7 +77,7 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('/')->with('success', 'Logout successful!');
     }
 
     // PROFILE
