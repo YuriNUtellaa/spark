@@ -9,7 +9,7 @@
             <h2 name="heading">ADMIN SLOT CONTROL</h2>
             <div class="slots">
                 @foreach($slots as $slot)
-                <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'reserved') reserved @else available @endif">
+                <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'pending') reserved @else available @endif">
                     <h2>{{$slot->slot_number}}</h2>
                     <h5>{{$slot->status}}</h5>
 
@@ -36,6 +36,7 @@
                         <form action="{{ route('reserveAdmin', ['slot' => $slot->id]) }}" method="GET">
                             <button type="submit" name="orange">Reserve a User</button>
                         </form>
+
                     @elseif($slot->status === 'occupied')
                         <button name="details" disabled>Details</button>
                         <form action="{{ route('end-renting-admin', ['slot' => $slot->id]) }}" method="POST">
@@ -48,12 +49,12 @@
                         <form action="{{ route('approve-rent', ['slot' => $slot->id]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" name="approve">Approve</button>
+                            <button type="submit" name="blue">Approve</button>
                         </form>
                         <form action="{{ route('/', ['slot' => $slot->id]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" name="deny">Deny</button>
+                            <button type="submit" name="cancel">Deny</button>
                         </form>
                     @endif
 

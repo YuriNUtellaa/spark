@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Slot;
 use App\Models\SlotRental;
 use App\Models\Reservation;
+use App\Models\UserMail;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 
@@ -34,36 +35,46 @@ class SlotsController extends Controller
 
 // USER SIDE //////////////////////////////////////////////////////////////////
 
-public function confirmRent(Request $request)
-{
-    // Check if the user already has an active rental
-    $alreadyRented = SlotRental::where('user_id', auth()->id())
-        ->whereNull('end_time')
-        ->exists();
 
-    if ($alreadyRented) {
-        return redirect()->back()->withErrors(['error' => 'You already have an active rental.']);
+    public function confirmRent(Request $request)
+    {
+        // Check if the user already has an active rental
+        $alreadyRented = SlotRental::where('user_id', auth()->id())
+            ->whereNull('end_time')
+            ->exists();
+
+        if ($alreadyRented) {
+            return redirect()->back()->withErrors(['error' => 'You already have an active rental.']);
+        }
+
+        // Proceed with renting the slot
+        $slot = Slot::findOrFail($request->slot_id);
+
+        // Update slot details
+        $slot->status = 'pending'; // Set status to pending
+        $slot->updated_at = now();
+        $slot->save();
+
+        // Create a new record in slot_rentals table with pending status
+        $slotRental = new SlotRental();
+        $slotRental->slot_id = $slot->id;
+        $slotRental->user_id = auth()->id();
+        $slotRental->start_time = now();
+        $slotRental->status = 'pending'; // Set status to pending
+        $slotRental->save();
+
+        // Create a new notification for the user
+        $notification = new UserMail();
+        $notification->user_id = auth()->id();
+        $notification->type = 'Slot';
+        $notification->title = 'Slot Rental Request Sent';
+        $notification->content = "We're pleased to inform you that your request to rent slot number ' . $slot->slot_number . ' has been successfully submitted. Our team will now review your request, and we kindly ask for your patience as we process it. Rest assured, we'll endeavor to provide you with a prompt response once your request has been reviewed and approved. Thank you for choosing our services, and we look forward to potentially accommodating your rental needs.";
+        $notification->save();
+
+        // Redirect to the slots page after successful rental request
+        return redirect()->route('slots')->with('success', 'Slot rental request sent. Please wait for approval.');
     }
 
-    // Proceed with renting the slot
-    $slot = Slot::findOrFail($request->slot_id);
-
-    // Update slot details
-    $slot->status = 'pending'; // Set status to pending
-    $slot->updated_at = now();
-    $slot->save();
-
-    // Create a new notification for the user
-    $notification = new UserMail();
-    $notification->user_id = auth()->id();
-    $notification->type = 'Slot';
-    $notification->title = 'Slot Rental Request Sent';
-    $notification->content = 'Your request to rent slot number ' . $slot->slot_number . ' has been sent. Please wait for approval.';
-    $notification->save();
-
-    // Redirect to the slots page after successful rental request
-    return redirect()->route('slots')->with('success', 'Slot rental request sent. Please wait for approval.');
-}
 
     
     public function endRent(Request $request, $slotId)

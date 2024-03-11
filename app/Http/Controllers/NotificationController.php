@@ -36,5 +36,17 @@ class NotificationController extends Controller
         // Pass the user mail message and user to the view for display
         return view('Users.Messages.messageAccount', compact('mail', 'user'));
     }
+
+    public function showSlotMessage($id)
+    {
+        // Retrieve the user mail message by its ID
+        $mail = UserMail::findOrFail($id);
+    
+        // Retrieve the user associated with the mail
+        $user = $mail->user;
+    
+        // Pass the user mail message and user to the view for display
+        return view('Users.Messages.messageSlot', compact('mail', 'user'));
+    }
     
 }

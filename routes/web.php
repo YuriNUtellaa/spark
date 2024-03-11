@@ -61,7 +61,7 @@ use App\Http\Controllers\NotificationController;
         });
 
         // APPROVE
-            Route::put('/approve-rent/{slot}', [SlotsController::class, 'approveRent'])->name('approve-rent');
+            Route::put('/approve-rent/{slot}', [AdminController::class, 'approveRent'])->name('approve-rent');
 
 
     // USERMANAGEMENT
@@ -122,5 +122,6 @@ use App\Http\Controllers\NotificationController;
 
         Route::get('/notifications', [NotificationController::class, 'index']);
         Route::get('/messageAccount/{id}', [NotificationController::class, 'showAccountMessage'])->name('messageAccount');
+        Route::get('/messageSlot/{id}', [NotificationController::class, 'showSlotMessage'])->name('messageSlot');
 
 

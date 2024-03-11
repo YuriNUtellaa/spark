@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('slot_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['pending', 'approved'])->default('pending');
             $table->dateTime('start_time');
             $table->dateTime('end_time')->nullable();
             $table->timestamps();

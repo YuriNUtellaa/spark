@@ -1,5 +1,4 @@
 @extends('header')
-@extends('footer')
 
 <!DOCTYPE html>
 <html lang="en">

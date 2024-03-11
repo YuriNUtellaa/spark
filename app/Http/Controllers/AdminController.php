@@ -80,40 +80,39 @@ class AdminController extends Controller
 
         // APPROVE
 
-            public function approveRent(Request $request, $slotId)
-            {
-                // Find the slot
-                $slot = Slot::findOrFail($slotId);
-                
-                // Update slot status to 'occupied'
-                $slot->status = 'occupied';
-                $slot->save();
-                
-                // Find the corresponding slot rental record
-                $slotRental = SlotRental::where('slot_id', $slotId)
-                    ->whereNull('end_time')
-                    ->first();
-
-                // Update slot rental status to 'approved'
-                $slotRental->status = 'approved';
-                $slotRental->save();
-
-                // Create a new notification for the user
-                // Replace 'user_id' with the actual user ID
-                $notification = new Notification();
-                $notification->user_id = $slotRental->user_id;
-                $notification->type = 'Slot';
-                $notification->title = 'Your rental request has been approved';
-                $notification->content = "Your rental request for slot ' . $slot->slot_number . ' has been approved. 
+        public function approveRent(Request $request, $slotId)
+        {
+            // Find the slot
+            $slot = Slot::findOrFail($slotId);
+            
+            // Update slot status to 'occupied'
+            $slot->status = 'occupied';
+            $slot->save();
+            
+            // Find the corresponding slot rental record
+            $slotRental = SlotRental::where('slot_id', $slot->id)
+                ->whereNull('end_time')
+                ->firstOrFail();
+        
+            // Update slot rental status to 'approved'
+            $slotRental->status = 'approved';
+            $slotRental->save();
+        
+            // Create a new notification for the user
+            $notification = new UserMail();
+            $notification->user_id = $slotRental->user_id;
+            $notification->type = 'Slot';
+            $notification->title = 'Your rental request has been approved';
+            $notification->content = "Your rental request for slot " . $slot->slot_number . " has been approved. 
                 We're excited to inform you that your rental request has been successfully approved! This means that you can now proceed with confidence, knowing that your desired rental arrangement has been confirmed.
                 Our team has carefully reviewed your request and found everything to be in order. We understand the importance of timely approvals, and we're delighted to have the opportunity to assist you in securing your rental.
                 With your request approved, you can now plan and prepare for your upcoming rental experience with ease. Whether it's a residential property, a commercial space, or any other type of rental, we're committed to ensuring that your experience is smooth and hassle-free.";
-                $notification->save();
-
-                // Redirect back with a success message
-                return redirect()->back()->with('success', 'Rental request approved successfully.');
-            }
-
+            $notification->save();
+        
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Rental request approved successfully.');
+        }
+        
     // RENT & RESERVATION HISTORY
 
     public function showAdminHistory()
