@@ -31,7 +31,7 @@
 
                     @if($slot->status === 'available')
                         <form action="{{ route('rentAdmin', ['slot' => $slot->id]) }}" method="GET">
-                            <button type="submit" name="blue">Rent a User</button>
+                            <button type="submit" name="blue">Rent an Irregular</button>
                         </form>
                         <form action="{{ route('reserveAdmin', ['slot' => $slot->id]) }}" method="GET">
                             <button type="submit" name="orange">Reserve a User</button>

@@ -17,8 +17,8 @@ class SlotSeeder extends Seeder
     {
         $slots = [];
 
-        $letters = range('A', 'E');
-        $numbers = range(1, 10);
+        $letters = ['R', 'I'];
+        $numbers = range(1, 25);
 
         foreach ($letters as $letter) {
             foreach ($numbers as $number) {
