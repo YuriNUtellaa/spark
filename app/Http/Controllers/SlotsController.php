@@ -259,11 +259,9 @@ public function confirmRent(Request $request)
         $slot->save();
 
         // Redirect the user back with a success message
-        return redirect()->route('slot-list')->with('success', 'Slot created successfully.');
+        return redirect()->route('slots-control-admin')->with('success', 'Slot created successfully.');
     }
     
 
-
-    
 
 }

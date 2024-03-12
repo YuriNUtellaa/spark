@@ -87,6 +87,10 @@ use App\Http\Controllers\NotificationController;
         Route::get('/admin/generate-user-management-report', [AdminController::class, 'generateUserManagementReportPDF'])
         ->name('admin.generate-user-management-report');
 
+    // CREATE SLOT
+
+        Route::post('/createSlot', [SlotsController::class, 'createSlot'])->name('create-slot');   
+
 
 
 // FOR USER INTERFACE ////////////////////////////////////

@@ -27,37 +27,39 @@
                     
                     <div class="slots">
                         @foreach($slots as $slot)
-                            <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'pending') reserved @else available @endif">
-                                <h2>{{$slot->slot_number}}</h2>
-                                <h5>{{$slot->status}}</h5>
-                                <span>Updated At: </span><p>{{$slot->updated_at}}</p>
+                            @if(strpos($slot->slot_number, 'R') !== false)
+                                <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'pending') reserved @else available @endif">
+                                    <h2>{{$slot->slot_number}}</h2>
+                                    <h5>{{$slot->status}}</h5>
+                                    <span>Updated At: </span><p>{{$slot->updated_at}}</p>
 
-                                @if($slot->status === 'available')
-                                    <form action="{{ route('rent', ['slot' => $slot->id]) }}" method="GET">
-                                        <button type="submit" name="blue">Occupy</button>
-                                    </form>
-                                    <form action="{{ route('reserve', ['slot' => $slot->id]) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" name="orange">Reserve</button>
-                                    </form>
-
-                                @elseif($slot->status === 'occupied')
-                                    <button name="details" disabled>Details</button>
-                                    @if(auth()->check() && $slot->currentRental()->user_id == auth()->id())
-                                        <form action="{{ route('end-renting', ['slot' => $slot->id]) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" name="cancel">End</button>
+                                    @if($slot->status === 'available')
+                                        <form action="{{ route('rent', ['slot' => $slot->id]) }}" method="GET">
+                                            <button type="submit" name="blue">Occupy</button>
                                         </form>
-                                    @else
-                                        <button type="submit" name="gray">End</button>
-                                    @endif
+                                        <form action="{{ route('reserve', ['slot' => $slot->id]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" name="orange">Reserve</button>
+                                        </form>
 
-                                @elseif($slot->status === 'pending')
-                                    <button name="details" disabled>Details</button>
-                                    <button type="submit" name="process">Under Request</button>
-                                @endif
-                            </div>
+                                    @elseif($slot->status === 'occupied')
+                                        <button name="details" disabled>Details</button>
+                                        @if(auth()->check() && $slot->currentRental()->user_id == auth()->id())
+                                            <form action="{{ route('end-renting', ['slot' => $slot->id]) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" name="cancel">End</button>
+                                            </form>
+                                        @else
+                                            <button type="submit" name="gray">End</button>
+                                        @endif
+
+                                    @elseif($slot->status === 'pending')
+                                        <button name="details" disabled>Details</button>
+                                        <button type="submit" name="process">Under Request</button>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>

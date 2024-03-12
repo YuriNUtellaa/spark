@@ -4,6 +4,12 @@
 
     @auth('admin')
 
+    @if(session('success'))
+        <div class="success-message-admin">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <section class="home-section" style="margin-top: 0">
         <div class="overall-slots">
             <h2 name="heading">ADMIN SLOT CONTROL</h2>
@@ -14,7 +20,7 @@
 
                 <div class="available" style="text-align: center;">
                     <h2>Create New Slot</h2>
-                    <form method="POST" action="{{ route('/') }}">
+                    <form method="POST" action="createSlot">
                         @csrf
 
                             <label for="slot-number" style="margin-top: 50px">Slot Number:</label>
