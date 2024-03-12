@@ -200,6 +200,7 @@ class AdminController extends Controller
         if ($validatedData['password']) {
             $user->password = bcrypt($validatedData['password']);
         }
+        
         $user->plate_number = $validatedData['plate_number'];
         $user->type = $validatedData['type'];
         $user->status = $validatedData['status'];

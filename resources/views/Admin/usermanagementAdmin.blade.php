@@ -20,6 +20,7 @@
                         <th>Plate Number</th>
                         <th>Image</th>
                         <th>Type</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -52,6 +53,16 @@
                                         <!-- Add other user types here -->
                                     </select>
                                 </td>
+
+                                <td>
+                                    <select name="status" required>
+                                        <option value="pending" {{ $user->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="verified" {{ $user->status == 'verified' ? 'selected' : '' }}>Verify</option>
+                                        <!-- Add other user types here -->
+                                    </select>
+                                </td>
+
+
                                 <td>
                                     <button type="submit" class="update-button">Update</button>
                                 
