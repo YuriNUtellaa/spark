@@ -251,6 +251,19 @@ button[name="gray"]{
     transition: all 0.3s;
 }
 
+button[name="process"]{
+    width: 180px;
+    background-color: rgb(128, 128, 128);
+    border: 3px solid rgb(128, 128, 128);
+    color: #fff;
+    padding: 3%;
+    text-align: center;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
 button[name="cancel"] {
     width: 180px;
     background-color: #fff;

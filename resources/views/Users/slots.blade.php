@@ -27,7 +27,7 @@
                     
                     <div class="slots">
                         @foreach($slots as $slot)
-                            <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'reserved') reserved @else available @endif">
+                            <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'pending') reserved @else available @endif">
                                 <h2>{{$slot->slot_number}}</h2>
                                 <h5>{{$slot->status}}</h5>
                                 <span>Updated At: </span><p>{{$slot->updated_at}}</p>
@@ -55,6 +55,7 @@
 
                                 @elseif($slot->status === 'pending')
                                     <button name="details" disabled>Details</button>
+                                    <button type="submit" name="process">Under Request</button>
                                 @endif
                             </div>
                         @endforeach

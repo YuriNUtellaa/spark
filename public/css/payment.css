@@ -1,0 +1,23 @@
+
+
+.payment-section{
+    height: 98vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eee;
+}
+
+.payment{
+    width: 300px;
+    height: 400px;
+
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    justify-content: center;
+    align-items: center;
+
+}

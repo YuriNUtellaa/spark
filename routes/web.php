@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SlotsController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NotificationController;
 
 
@@ -125,3 +126,8 @@ use App\Http\Controllers\NotificationController;
         Route::get('/messageSlot/{id}', [NotificationController::class, 'showSlotMessage'])->name('messageSlot');
 
 
+    // PAYMENT
+
+        Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment-page');
+        Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+        Route::post('/paymentConfirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');

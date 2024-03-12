@@ -13,9 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('reservations:update-expired')->everyMinute();
+        $schedule->command('payments:create-monthly')->monthly();
     }
     
-
     /**
      * Register the commands for the application.
      */

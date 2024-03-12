@@ -25,6 +25,7 @@
     <link href="{{ asset('css/message.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
     <link href="{{ asset('css/notification.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/payment.css') }}" rel="stylesheet">
 
 </head>
 
@@ -64,8 +65,9 @@
         @auth
             <a href="/home" class="logo"><img src="/layouts/SPark-logos_white.png" alt=""></a>
             <ul class="navmenu">
-                <li><a href="/">Home</a></li>
-                <li><a href="/slots">Slot</a></li>
+                <li><a href="/">Home</a></li>|
+                <li><a href="/slots">Slot</a></li>|
+                <li><a href="/payment">Payment Form</a></li>|
                 <li><a href="/about-us">About Us</a></li>
             </ul>
 

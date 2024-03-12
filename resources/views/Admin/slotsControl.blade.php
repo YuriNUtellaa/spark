@@ -8,6 +8,22 @@
         <div class="overall-slots">
             <h2 name="heading">ADMIN SLOT CONTROL</h2>
             <div class="slots">
+
+
+                {{-- CREATE SLOT --}}
+
+                <div class="available" style="text-align: center;">
+                    <h2>Create New Slot</h2>
+                    <form method="POST" action="{{ route('/') }}">
+                        @csrf
+
+                            <label for="slot-number" style="margin-top: 50px">Slot Number:</label>
+                            <input type="text" id="slot-number" name="slot_number" required style="padding: 5px; width: 98%; border: 3px solid rgb(74, 83, 118); text-align:center">
+        
+                        <button type="submit" name="blue" style="margin-top: 90px">Create Slot</button>
+                    </form>
+                </div>
+
                 @foreach($slots as $slot)
                 <div class="slot @if($slot->status === 'occupied') occupied @elseif($slot->status === 'pending') reserved @else available @endif">
                     <h2>{{$slot->slot_number}}</h2>

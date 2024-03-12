@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\MonthlyPayment;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,5 +66,10 @@ class User extends Authenticatable
     public function userMails()
     {
         return $this->hasMany(UserMail::class);
+    }
+
+    public function monthlyPayments()
+    {
+        return $this->hasMany(MonthlyPayment::class);
     }
 }
