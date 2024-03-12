@@ -50,7 +50,6 @@
                                         </option>
                                         <option value="irregular" {{ $user->type == 'irregular' ? 'selected' : '' }}>
                                             Irregular</option>
-                                        <!-- Add other user types here -->
                                     </select>
                                 </td>
 
@@ -58,7 +57,6 @@
                                     <select name="status" required>
                                         <option value="pending" {{ $user->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="verified" {{ $user->status == 'verified' ? 'selected' : '' }}>Verify</option>
-                                        <!-- Add other user types here -->
                                     </select>
                                 </td>
 

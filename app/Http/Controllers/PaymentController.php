@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\UserMail;
+use App\Models\UserMail;
 use Illuminate\Http\Request;
 use App\Models\MonthlyPayment;
 
@@ -76,36 +76,28 @@ class PaymentController extends Controller
     // Function to update a payment
     public function updatePayment(Request $request, $id)
     {
-        try {
-            // Find the payment by ID
-            $payment = MonthlyPayment::findOrFail($id);
+        // Find the payment by ID
+        $payment = MonthlyPayment::findOrFail($id);
     
-            // Validate the incoming request data
-            $request->validate([
-                'status' => 'required|in:pending,paid,delay',
-            ]);
+        // Validate the incoming request data
+        $request->validate([
+            'status' => 'required|in:pending,paid,delay',
+        ]);
     
-            // Check if the status has changed
-            if ($payment->status !== $request->status) {
-                // Update the payment status
-                $payment->status = $request->status;
-                $payment->save();
+        // Update the payment status
+        $payment->status = $request->status;
+        $payment->save();
     
-                // Create a new record in user_mails
-                $userMail = new UserMail();
-                $userMail->user_id = $payment->user_id;
-                $userMail->type = 'Payment';
-                $userMail->title = 'Payment Status Update';
-                $userMail->content = 'Your payment status has been updated to ' . $request->status;
-                $userMail->save();
-            }
+        // Create a new record in user_mails
+        $userMail = new UserMail();
+        $userMail->user_id = $payment->user_id;
+        $userMail->type = 'Payment';
+        $userMail->title = 'Payment Status Update';
+        $userMail->content = 'Your payment status has been updated to ' . $request->status;
+        $userMail->save();
     
-            // Redirect back with a success message
-            return redirect()->back()->with('success', 'Payment status updated successfully.');
-        } catch (\Exception $e) {
-            // Handle any exceptions
-            return redirect()->back()->with('error', 'Failed to update payment status.');
-        }
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Payment status updated successfully.');
     }
     
     

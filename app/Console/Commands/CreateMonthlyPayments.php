@@ -26,13 +26,21 @@ class CreateMonthlyPayments extends Command
     
         // Create initial payment records for each user
         foreach ($users as $user) {
-            MonthlyPayment::create([
-                'user_id' => $user->id,
-                'month' => $currentYearMonth, // Set the month to the current year and month
-                'method' => 'online', // or 'on-site' depending on your logic
-                'status' => 'pending',
-                'updated_at' => Carbon::now(),
-            ]);
+            // Check if there's already a payment record for this user in the current month
+            $existingPayment = MonthlyPayment::where('user_id', $user->id)
+                ->where('month', $currentYearMonth)
+                ->exists();
+            
+            // If no existing payment record found, create a new one
+            if (!$existingPayment) {
+                MonthlyPayment::create([
+                    'user_id' => $user->id,
+                    'month' => $currentYearMonth, // Set the month to the current year and month
+                    'method' => 'online', // or 'on-site' depending on your logic
+                    'status' => 'pending',
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
         }
     
         $this->info('Monthly payments created successfully.');
