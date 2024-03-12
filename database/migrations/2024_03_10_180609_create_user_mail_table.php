@@ -16,7 +16,7 @@ class CreateUserMailTable extends Migration
         Schema::create('user_mail', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['Account', 'Slot']);
+            $table->enum('type', ['Account', 'Slot', 'Payment']);
             $table->string('title');
             $table->text('content');
             $table->timestamps(); // Creates 'created_at' and 'updated_at' columns

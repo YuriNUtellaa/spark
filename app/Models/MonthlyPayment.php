@@ -18,5 +18,10 @@ class MonthlyPayment extends Model
         'status',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class); // Assuming each monthly payment belongs to a user
+    }
+
     // Define relationships here if needed
 }

@@ -89,7 +89,12 @@ use App\Http\Controllers\NotificationController;
 
     // CREATE SLOT
 
-        Route::post('/createSlot', [SlotsController::class, 'createSlot'])->name('create-slot');   
+        Route::post('/createSlot', [SlotsController::class, 'createSlot'])->name('create-slot');  
+
+    // PAYMENT MANAGEMENT
+
+        Route::get('/paymentManagement', [PaymentController::class, 'showPaymentManagement'])->name('paymentManagement');
+        Route::post('updatePayment/{id}', [PaymentController::class, 'updatePayment'])->name('updatePayment');
 
 
 

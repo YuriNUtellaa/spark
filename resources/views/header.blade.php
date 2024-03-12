@@ -44,7 +44,7 @@
                     <li><a href="/"><i class='bx bx-home'></i> <span>Home</span></a></li>
                     <li><a href="/slots-control-admin"><i class='bx bx-calendar'></i> <span>Slot Control</span></a></li>
                     <li><a href="/user-management"><i class='bx bx-user'></i> <span>User Management</span></a></li>
-                    <li><a href="/"><i class='bx bx-wallet'></i> <span>Payment Management</span></a></li>
+                    <li><a href="/paymentManagement"><i class='bx bx-wallet'></i> <span>Payment Management</span></a></li>
                     <li><a href="/history-admin"><i class='bx bx-book'></i> <span>Rental Record</span></a></li>
                     <li><a href="/summary"><i class='bx bx-bar-chart'></i> <span>Summary Report</span></a></li>
                 </ul>
