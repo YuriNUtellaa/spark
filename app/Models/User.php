@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(MonthlyPayment::class);
     }
+    public function latestPayment()
+    {
+        return $this->hasOne(MonthlyPayment::class)->latestOfMany();
+    }
+
 }

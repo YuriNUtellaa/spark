@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Summary Report</title>
@@ -14,13 +15,13 @@
             background: #f8f9fa;
         }
 
-        .header{
+        .header {
             height: 120px;
             text-align: right;
             font-size: 12px;
         }
 
-        .header h1{
+        .header h1 {
             font-size: 60px;
             color: rgb(232, 113, 33);
             margin-top: 0px;
@@ -29,11 +30,11 @@
             text-align: left;
         }
 
-        .image{
+        .image {
             position: absolute;
         }
 
-        .image img{
+        .image img {
             width: 200px;
             top: 10px;
             right: 10px;
@@ -44,44 +45,58 @@
             padding: 20px;
             background: #fff;
         }
+
         .text-center {
             text-align: center;
             font-size: 20px;
         }
+
         .table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        .table, .table th, .table td {
+
+        .table,
+        .table th,
+        .table td {
             border: 1px solid #dee2e6;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             padding: 7px 15px;
             text-align: center;
         }
+
         .table thead {
             background-color: rgb(74, 83, 118);
             color: #ffffff;
         }
+
         .table thead th {
             font-weight: 600;
             font-size: 12px;
         }
+
         .text-right {
             text-align: right;
         }
+
         .table tbody tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
         .table tbody tr td {
             font-size: 12px;
         }
+
         .text-title {
             margin-bottom: 0;
             color: #333333;
             font-size: 2em;
         }
+
         h2 {
             font-size: 15px;
             background-color: rgb(74, 83, 118);
@@ -89,6 +104,7 @@
             padding: 10px;
             text-align: center;
         }
+
         .grand-total {
             background-color: #343a40;
             color: white;
@@ -105,6 +121,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="header">
@@ -141,11 +158,12 @@
             <tr>
                 <th>Rental ID</th>
                 <th>Slot Number</th>
-                <th>User Name</th>
+                <th>Name</th>
                 <th>Hours</th>
                 <th>Minutes</th>
                 <th>Minimum Rate</th>
                 <th>Additional Rate</th>
+
                 <th class="currency">Total</th>
             </tr>
             </thead>
@@ -157,10 +175,9 @@
                         <td>{{ $rental->user->username }}</td>
                         <td>{{ $rental->hours }}</td>
                         <td>{{ $rental->minutes }}</td>
-                        <td> <span class = "currency">₱{{ number_format($ratePerHour, 2) }}</span></td>
-                        <td> <span class="currency">₱{{ number_format($rental->additional_rate, 2) }}</span>
-                        </td>
-                        <<td class="currency">₱{{ number_format($rental->total, 2) }}</td>
+                        <td>₱ {{ number_format($ratePerHour, 2) }}</td>
+                        <td>₱ {{ number_format($rental->additional_rate, 2) }}</td>
+                        <td>₱ {{ number_format($rental->total, 2) }}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -180,7 +197,10 @@
             <table class="table">
                 <tr>
                     <th>User ID</th>
-                    <th>User Name</th>
+                    <th>Slot Number</th>
+                    <th>Name</th>
+                    <th>Month</th>
+                    <th>Status</th>
                     <th>Monthly Payment</th>
                 </tr>
                 </thead>
@@ -188,12 +208,15 @@
                     @foreach ($regularUsers as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td>{{ $user->slot_number }}</td>
                             <td>{{ $user->username }}</td>
+                            <td>{{ $user->month }}</td>
+                            <td>{{ $user->status }}</td>
                             <td>₱ {{ number_format($user->monthly_payment, 2) }}</td>
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2" class="text-right"><strong>Grand Total:</strong></td>
+                        <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
                         <td>₱ {{ number_format($grandTotalRegular, 2) }}</td>
                     </tr>
                 </tbody>

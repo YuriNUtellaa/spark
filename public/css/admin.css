@@ -159,11 +159,11 @@ td form input[type="datetime-local"] {
 }
 
 
-
 /* USER MANAGEMENT */
 
-.content{
+.content {
     padding: 5%;
+    background-color: #f4f4f4;
 }
 
 .user-management-container {
@@ -171,64 +171,111 @@ td form input[type="datetime-local"] {
     margin: 2rem auto;
     padding: 1rem;
     background: #ffffff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     border-radius: 8px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 2rem;
+    display: flex;
+    /* Added to use flexbox */
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    /* Center-align children horizontally */
 }
+
+.user-management-container>h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+.user-management-container::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 2px;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+.report-generation-container {
+    text-align: center;
+    margin-bottom: 1rem;
+    /* Spacing between this section and the table */
+}
+
+.user-management-form {
+    display: inline-block;
+    /* Allows the form to center align with text-align */
+    margin-top: 1rem;
+    /* Space above the form */
+}
+
+.report-label,
+.report-input,
+.btn.generate-report-btn {
+    display: inline-block;
+    /* Inline-block elements can be centered with text-align */
+    margin: 0 5px;
+    /* Spacing between form elements */
+}
+
+.btn.generate-report-btn {
+    vertical-align: middle;
+    /* Aligns the button vertically with inputs */
+    /* Existing styles for buttons */
+}
+
+/* No changes required for .user-management-container::after */
 
 .user-management-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    border: 1px solid #dee2e6;
+    border: 1px solid #ccc;
+    background: transparent;
+    margin-bottom: 0;
 }
 
 .user-management-table th,
 .user-management-table td {
-    padding: 8px; /* Adjust padding for less white space */
-    border: 1px solid #dee2e6;
-    vertical-align: middle; /* Align the content in the middle vertically */
+    padding: 8px;
+    border: 1px solid #0f0f0f;
+    vertical-align: middle;
 }
 
 .user-management-table thead th {
-    background-color: rgb(74, 83, 118);
+    background-color: #4a5376;
     color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .user-management-table tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+    /* White rows for even rows */
+}
+
+.user-management-table tbody tr:nth-of-type(odd) {
     background-color: #f2f2f2;
+    /* Light grey rows for odd rows */
 }
 
 .user-management-table tbody tr:hover {
-    background-color: #dddfe2;
+    background-color: #ececec;
+    /* Hover color */
 }
 
 .user-management-table td:empty {
     background-color: #fff;
 }
 
-/* Adjust column widths as needed */
-.user-management-table th:nth-child(1) {
-    width: 5%; /* ID column width */
-}
-
-.user-management-table th:nth-child(2),
-.user-management-table th:nth-child(3),
-.user-management-table th:nth-child(4),
-.user-management-table th:nth-child(5) {
-    width: 15%; /* Adjust width for other columns as needed */
-}
-
-.user-management-table th:nth-child(6) {
-    width: 10%; /* Image column width */
-}
-
-.user-management-table th:nth-child(7) {
-    width: 10%; /* Type column width, adjust if needed */
-}
-
-.user-management-table th:nth-child(8) {
-    width: 15%; /* Actions column width */
-}
+/* No changes required for column width adjustments */
 
 .user-image {
     width: 50px;
@@ -236,74 +283,83 @@ td form input[type="datetime-local"] {
     object-fit: cover;
     border-radius: 50%;
     margin: 0 10px;
+    border: 2px solid black;
 }
 
-.user-management-table input[type="text"],
-.user-management-table input[type="password"],
-.user-management-table input[type="email"],
-.user-management-table input[type="file"],
-.user-management-table select {
-    text-align: center;
-    font-size: 0.8rem;
-    padding: 5px 10px;
-    margin: 2px 0;
-    border: 1px solid #ced4da;
-    border-radius: 0.26rem;
-    width: auto; /* Change from 100% to auto to accommodate content width */
-    min-width: 150px; /* Set a minimum width to handle short content */
-}
-
-/* Update Button */
+/* No changes required for input and select styles */
 
 .update-button {
+
     width: 70px;
-    background-color: rgb(74, 83, 118);
+    background-color: blue;
+    /* Set the initial color for the Update button to blue */
     color: white;
     border: none;
     padding: 5px 10px;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 5px;
+
+}
+
+.delete-button {
+    width: 70px;
+    background-color: orange;
+    /* Set the initial color for the Delete button to orange */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    font-weight: bold;
     margin-bottom: 5px;
 }
 
-.update-button:hover {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    scale: 0.97;
-}
 
-/* Delete Button */
-.delete-button {
-    width: 70px;
-    background-color: rgb(232, 113, 33);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+
+.update-button:hover {
+    background-color: green;
+    /* Green background on hover for update button */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(0.97);
 }
 
 .delete-button:hover {
+    background-color: red;
+    /* Red background on hover for delete button */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    scale: 0.97;
+    transform: scale(0.97);
 }
 
-/* Responsive Table */
-@media screen and (max-width: 768px) {
-    .user-management-table-container {
-        overflow-x: auto;
-    }
+/* No changes required for responsive table styles */
+
+/* New styles for section titles */
+.section-title {
+    background-color: #4a5376;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 2rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 /* RENT INTERFACE */
 
-    .form-group{
-        justify-content: center;
-        align-items: center;
-    }
+.form-group {
+    justify-content: center;
+    align-items: center;
+}
 
-    
+
 /* BUTTON FOR REPORT */
 
 .generate-report-btn {

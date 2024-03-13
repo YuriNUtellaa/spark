@@ -67,7 +67,10 @@
                 <thead>
                     <tr>
                         <th>User ID</th>
+                        <th>Slot Number</th>
                         <th>Name</th>
+                        <th>Month</th>
+                        <th>Status</th>
                         <th>Monthly Payment</th>
                     </tr>
                 </thead>
@@ -75,16 +78,20 @@
                     @foreach ($regularUsers as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td>{{ $user->slot_number }}</td>
                             <td>{{ $user->username }}</td>
+                            <td>{{ $user->month }}</td>
+                            <td>{{ $user->status }}</td>
                             <td>₱ {{ number_format($user->monthly_payment, 2) }}</td>
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2" class="text-right"><strong>Grand Total:</strong></td>
+                        <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
                         <td>₱ {{ number_format($grandTotalRegular, 2) }}</td>
                     </tr>
                 </tbody>
             </table>
+
         </section>
 
         <div class="report-selection">
@@ -103,5 +110,3 @@
     </div>
 
 </body>
-
-</html>

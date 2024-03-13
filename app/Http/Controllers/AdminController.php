@@ -84,58 +84,70 @@ class AdminController extends Controller
         {
             // Find the slot
             $slot = Slot::findOrFail($slotId);
-            
+
             // Update slot status to 'occupied'
             $slot->status = 'occupied';
             $slot->save();
-            
+
             // Find the corresponding slot rental record
             $slotRental = SlotRental::where('slot_id', $slot->id)
                 ->whereNull('end_time')
                 ->firstOrFail();
-        
+
             // Update slot rental status to 'approved'
             $slotRental->status = 'approved';
             $slotRental->save();
-        
+
             // Create a new notification for the user
             $notification = new UserMail();
             $notification->user_id = $slotRental->user_id;
             $notification->type = 'Slot';
             $notification->title = 'Your rental request has been approved';
-            $notification->content = "Your rental request for slot " . $slot->slot_number . " has been approved. 
+            $notification->content = "Your rental request for slot " . $slot->slot_number . " has been approved.
                 We're excited to inform you that your rental request has been successfully approved! This means that you can now proceed with confidence, knowing that your desired rental arrangement has been confirmed.
                 Our team has carefully reviewed your request and found everything to be in order. We understand the importance of timely approvals, and we're delighted to have the opportunity to assist you in securing your rental.
                 With your request approved, you can now plan and prepare for your upcoming rental experience with ease. Whether it's a residential property, a commercial space, or any other type of rental, we're committed to ensuring that your experience is smooth and hassle-free.";
             $notification->save();
-        
+
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Rental request approved successfully.');
         }
-        
+
     // RENT & RESERVATION HISTORY
 
     public function showAdminHistory()
     {
-        $slotRentals = SlotRental::with('user')->orderBy('created_at', 'desc')->get();
-        $reservations = Reservation::with('user')->orderBy('created_at', 'desc')->get();
+        $irregular = SlotRental::with(['user', 'slot'])
+        ->whereHas('user', function ($query) {
+            $query->where('type', 'irregular');
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        return view('Admin.historyAdmin', compact('slotRentals', 'reservations'));
+        $regular = SlotRental::with(['user', 'slot'])
+        ->whereHas('user', function ($query) {
+            $query->where('type', 'regular');
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+
+        return view('Admin.historyAdmin', compact('regular', 'irregular'));
     }
 
         // DELETE FUNCTION
 
             public function deleteSlotRental($id)
             {
-                $slotRental = SlotRental::findOrFail($id);
-                $slotRental->delete();
+                $regular = SlotRental::findOrFail($id);
+                $regular->delete();
                 return back()->with('success', 'Slot rental deleted successfully.');
             }
 
             public function deleteReservation($id)
             {
-                $reservation = Reservation::findOrFail($id);
-                $reservation->delete();
+                $irregular = Reservation::findOrFail($id);
+                $irregular->delete();
                 return back()->with('success', 'Reservation deleted successfully.');
             }
 
@@ -148,8 +160,8 @@ class AdminController extends Controller
                     'end_time' => 'required|date|after_or_equal:start_time',
                 ]);
 
-                $slotRental = SlotRental::findOrFail($id);
-                $slotRental->update([
+                $regular = SlotRental::findOrFail($id);
+                $regular->update([
                     'start_time' => $request->start_time,
                     'end_time' => $request->end_time,
                 ]);
@@ -164,8 +176,8 @@ class AdminController extends Controller
                     'end_time' => 'required|date|after_or_equal:start_time',
                 ]);
 
-                $reservation = Reservation::findOrFail($id);
-                $reservation->update([
+                $irregular = Reservation::findOrFail($id);
+                $irregular->update([
                     'start_time' => $request->start_time,
                     'end_time' => $request->end_time,
                 ]);
@@ -193,26 +205,26 @@ class AdminController extends Controller
             'status' => 'required|string|max:255',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         // Update the user
         $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
         if ($validatedData['password']) {
             $user->password = bcrypt($validatedData['password']);
         }
-        
+
         $user->plate_number = $validatedData['plate_number'];
         $user->type = $validatedData['type'];
         $user->status = $validatedData['status'];
-    
+
         if ($request->hasFile('image')) {
             $imageName = $user->id . '_' . time() . '.' . $request->image->extension();
             $request->image->move(public_path('profiles'), $imageName);
             $user->image = $imageName;
         }
-    
+
         $user->save();
-    
+
         // Create a record in user_mail if the user account has been verified
         if ($validatedData['status'] === 'verified') {
             UserMail::create([
@@ -225,17 +237,17 @@ class AdminController extends Controller
                 Thank you for choosing SPark Management System. We look forward to serving you and helping you achieve your goals.",
             ]);
         }
-    
+
         return redirect()->route('admin.user-management')->with('success', 'User updated successfully.');
     }
-    
-    
+
+
     public function deleteUser(User $user)
         {
             $user->delete(); // This deletes the user from the database
             return redirect()->route('admin.user-management')->with('success', 'User deleted successfully.');
         }
-    
+
 
     // SUMMARY REPORT ///////////////////////////////////////////////
 
@@ -270,32 +282,47 @@ class AdminController extends Controller
         ->filter();
 
 
+
+
         // Calculate grand totals
         $grandTotalRental = $rentals->sum('total');
 
 
         // Regular users monthly payment
-        $regularUsers = User::where('type', 'regular')
-                    ->get()
-                    ->map(function ($user) use ($fixedMonthlyPayment) {
-                        $user->monthly_payment = $fixedMonthlyPayment;
-                        return $user;
-                    });
-        $grandTotalRegular = $regularUsers->sum('monthly_payment');
+
+        $currentMonth = Carbon::now()->format('Y-m');
+        $regularUsers = User::with('latestPayment')
+        ->where('type', 'regular')
+        ->get()
+        ->map(function ($user) use ($fixedMonthlyPayment, $currentMonth) {
+            $latestPayment = $user->latestPayment;
+            $user->slot_number = optional($latestPayment)->slot_number ?? 'N/A';
+            $user->month = optional($latestPayment)->month ?? $currentMonth;
+            $user->status = optional($latestPayment)->status ?? 'N/A';
+            // Ensure that the fixed monthly payment is displayed
+            $user->monthly_payment = $fixedMonthlyPayment; // This assigns the fixed monthly payment regardless of the latest payment status
+            return $user;
+        });
+
+
+
+    $grandTotalRegular = $regularUsers->sum('monthly_payment');
 
         // Return the view with all the necessary variables
         return view('Admin.summary', [
-            'rentals' => $rentals,
-
+             'rentals' => $rentals,
             'regularUsers' => $regularUsers,
-            'grandTotalRental' => $grandTotalRental,
-
             'grandTotalRegular' => $grandTotalRegular,
+            'grandTotalRental' => $grandTotalRental,
             'ratePerHour' => $ratePerHour,
             'additionalRatePerMinute' => $additionalRatePerMinute
         ]);
     }
-    
+
+
+
+
+
     public function generateSummaryReportPDF(Request $request){
 
         $ratePerHour = 50; // Base rate for up to one hour
@@ -312,8 +339,6 @@ class AdminController extends Controller
             // Rentals
             $rentals = SlotRental::with('user')
             ->join('slots', 'slot_rentals.slot_id', '=', 'slots.id')
-            ->whereYear('start_time', $year)
-            ->whereMonth('start_time', $month)
             ->selectRaw('
                 slot_rentals.id,
                 slots.slot_number AS slot_number,
@@ -322,7 +347,6 @@ class AdminController extends Controller
             ')
             ->groupBy('slot_rentals.id', 'slots.slot_number', 'user_id')
             ->get()
-
             ->map(function ($rental) use ($ratePerHour, $additionalRatePerMinute) {
                 if ($rental->user && $rental->user->type === 'irregular') {
                     $totalMinutes = $rental->total_minutes;
@@ -330,34 +354,49 @@ class AdminController extends Controller
                     $rental->minutes = $totalMinutes % 60;
                     $additionalMinutes = max($totalMinutes - 60, 0);
                     $rental->additional_rate = $additionalMinutes * $additionalRatePerMinute;
-                    $rental->total = $ratePerHour * ($rental->hours ?: 1) + $rental->additional_rate; // dapat at least one hour is charged
-                    return $rental; // balik modified rental
+                    $rental->total = $ratePerHour * ($rental->hours ?: 1) + $rental->additional_rate; // dapat sure na  at least one hour is charged
+                    return $rental; // Balik sa  modified rental
                 }
                 return null; // This rental will be excluded because the user does not exist or is not irregular
             })
             ->filter();
 
 
-        // Calculate grand totals
-        $grandTotalRental = $rentals->sum('total');
 
 
-        // Regular users monthly payment
-        $regularUsers = User::where('type', 'regular')
-        ->get()
-        ->map(function ($user) use ($fixedMonthlyPayment) {
-            $user->monthly_payment = $fixedMonthlyPayment;
-            return $user;
-        });
+            // Calculate grand totals
+            $grandTotalRental = $rentals->sum('total');
+
+
+            // Regular users monthly payment
+
+            $currentMonth = Carbon::now()->format('Y-m');
+            $regularUsers = User::with('latestPayment')
+            ->where('type', 'regular')
+            ->get()
+            ->map(function ($user) use ($fixedMonthlyPayment, $currentMonth) {
+                $latestPayment = $user->latestPayment;
+                $user->slot_number = optional($latestPayment)->slot_number ?? 'N/A';
+                $user->month = optional($latestPayment)->month ?? $currentMonth;
+                $user->status = optional($latestPayment)->status ?? 'N/A';
+                // Ensure that the fixed monthly payment is displayed
+                $user->monthly_payment = $fixedMonthlyPayment; // This assigns the fixed monthly payment regardless of the latest payment status
+                return $user;
+            });
+
+
+
+        $grandTotalRegular = $regularUsers->sum('monthly_payment');
 
         $data = [
             'rentals' => $rentals,
-
             'regularUsers' => $regularUsers,
-            'grandTotalRental' => $rentals->sum('total'),
+            'grandTotalRegular' => $grandTotalRegular,
+            'grandTotalRental' => $grandTotalRental,
+            'ratePerHour' => $ratePerHour,
+            'additionalRatePerMinute' => $additionalRatePerMinute,
             'reportMonth' => $formattedMonth,
-            'grandTotalRegular' => $regularUsers->sum('monthly_payment'),
-            'ratePerHour' => $ratePerHour
+
 
         ];
 
@@ -390,5 +429,5 @@ class AdminController extends Controller
         $pdf = PDF::loadView('pdf.usermanage', $data);
         return $pdf->download('user-management-report-' . $reportMonth . '.pdf');
     }
-    
+
 }
